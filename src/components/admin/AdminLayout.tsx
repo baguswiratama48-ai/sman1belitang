@@ -16,7 +16,15 @@ import {
   Bell,
   Search,
   Settings,
-  FileEdit
+  FileEdit,
+  History,
+  Network,
+  Users,
+  UserCog,
+  GraduationCap,
+  Building2,
+  Calendar,
+  Award
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import logoSmansa from "@/assets/logo-smansa.png";
@@ -35,6 +43,14 @@ const menuItems = [
   { label: "Berita", href: "/admin/berita", icon: Newspaper },
   { label: "Galeri", href: "/admin/galeri", icon: Image },
   { label: "Pengumuman", href: "/admin/pengumuman", icon: Megaphone },
+  { label: "Sejarah", href: "/admin/sejarah", icon: History },
+  { label: "Struktur Organisasi", href: "/admin/struktur", icon: Network },
+  { label: "Guru", href: "/admin/guru", icon: Users },
+  { label: "Tendik", href: "/admin/tendik", icon: UserCog },
+  { label: "Kelas", href: "/admin/kelas", icon: GraduationCap },
+  { label: "Fasilitas", href: "/admin/fasilitas", icon: Building2 },
+  { label: "Kalender Akademik", href: "/admin/kalender", icon: Calendar },
+  { label: "Alumni", href: "/admin/alumni", icon: Award },
 ];
 
 export function AdminLayout() {
