@@ -14,6 +14,14 @@ import BeritaAdmin from "./pages/admin/BeritaAdmin";
 import GaleriAdmin from "./pages/admin/GaleriAdmin";
 import PengumumanAdmin from "./pages/admin/PengumumanAdmin";
 import KontenAdmin from "./pages/admin/KontenAdmin";
+import SejarahAdmin from "./pages/admin/SejarahAdmin";
+import StrukturAdmin from "./pages/admin/StrukturAdmin";
+import GuruAdmin from "./pages/admin/GuruAdmin";
+import TendikAdmin from "./pages/admin/TendikAdmin";
+import KelasAdmin from "./pages/admin/KelasAdmin";
+import FasilitasAdmin from "./pages/admin/FasilitasAdmin";
+import KalenderAdmin from "./pages/admin/KalenderAdmin";
+import AlumniAdmin from "./pages/admin/AlumniAdmin";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +59,14 @@ const App = () => (
               <Route path="galeri" element={<GaleriAdmin />} />
               <Route path="pengumuman" element={<PengumumanAdmin />} />
               <Route path="konten" element={<KontenAdmin />} />
+              <Route path="sejarah" element={<SejarahAdmin />} />
+              <Route path="struktur" element={<StrukturAdmin />} />
+              <Route path="guru" element={<GuruAdmin />} />
+              <Route path="tendik" element={<TendikAdmin />} />
+              <Route path="kelas" element={<KelasAdmin />} />
+              <Route path="fasilitas" element={<FasilitasAdmin />} />
+              <Route path="kalender" element={<KalenderAdmin />} />
+              <Route path="alumni" element={<AlumniAdmin />} />
             </Route>
             
             <Route path="*" element={<NotFound />} />
