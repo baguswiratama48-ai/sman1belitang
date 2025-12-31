@@ -1,26 +1,26 @@
-import { Target, Eye, BookOpen, Heart, Globe, Award } from "lucide-react";
+import { Target, Eye, Clock, Heart, BookOpen, Sparkles, Users } from "lucide-react";
 
 export function VisiMisiSection() {
   const misi = [
     {
-      icon: BookOpen,
-      text: "Melaksanakan pengembangan kurikulum yang adaptif dan inovatif",
+      icon: Clock,
+      text: "Membudayakan sikap disiplin",
     },
     {
       icon: Heart,
-      text: "Menumbuhkembangkan penghayatan dan pengamalan ajaran agama",
+      text: "Menumbuhkan penghayatan ajaran-ajaran agama dan budaya",
     },
     {
-      icon: Award,
-      text: "Melaksanakan pembelajaran dan bimbingan secara efektif",
+      icon: BookOpen,
+      text: "Meningkatkan prestasi akademik",
     },
     {
-      icon: Globe,
-      text: "Mengembangkan potensi siswa secara optimal berbasis teknologi",
+      icon: Sparkles,
+      text: "Membekali keterampilan dan kecakapan hidup",
     },
     {
-      icon: Target,
-      text: "Menerapkan manajemen partisipatif dengan melibatkan seluruh warga sekolah",
+      icon: Users,
+      text: "Mewujudkan fisik sekolah dan warga sekolah berpenampilan menarik",
     },
   ];
 
