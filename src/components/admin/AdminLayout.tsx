@@ -23,7 +23,10 @@ import {
   Building2,
   Calendar,
   Award,
-  FileEdit
+  FileEdit,
+  Trophy,
+  Palette,
+  Shield
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import logoSmansa from "@/assets/logo-smansa.png";
@@ -48,6 +51,9 @@ const menuItems = [
   { label: "Tendik", href: "/admin/tendik", icon: UserCog },
   { label: "Kelas", href: "/admin/kelas", icon: GraduationCap },
   { label: "Fasilitas", href: "/admin/fasilitas", icon: Building2 },
+  { label: "Prestasi", href: "/admin/prestasi", icon: Trophy },
+  { label: "Ekskul", href: "/admin/ekskul", icon: Palette },
+  { label: "OSIS", href: "/admin/osis", icon: Shield },
   { label: "Kalender Akademik", href: "/admin/kalender", icon: Calendar },
   { label: "Alumni", href: "/admin/alumni", icon: Award },
 ];
