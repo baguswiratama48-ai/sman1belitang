@@ -15,9 +15,9 @@ import SLIDE_5 from "@/assets/SLIDE_5.png";
 
 export function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { data: slides, isLoading } = useSiteSetting<HeroSlide[]>('hero_slides');
 
-  const defaultSlides: HeroSlide[] = [
+  // Gunakan langsung foto lokal - tidak dari database
+  const activeSlides = [
     {
       image: SLIDE_1,
       title: "Selamat Datang di",
@@ -50,8 +50,6 @@ export function HeroSection() {
     },
   ];
 
-  const activeSlides = slides && slides.length > 0 ? slides : defaultSlides;
-
   useEffect(() => {
     if (activeSlides.length <= 1) return;
     const timer = setInterval(() => {
@@ -63,14 +61,8 @@ export function HeroSection() {
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + activeSlides.length) % activeSlides.length);
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % activeSlides.length);
 
-  if (isLoading) {
-    return (
-      <section className="relative h-[600px] lg:h-[700px] bg-primary animate-pulse" />
-    );
-  }
-
   return (
-    <section className="relative h-[600px] lg:h-[700px] overflow-hidden">
+    <section className="relative w-full aspect-[3/2] md:aspect-[16/9] lg:aspect-[21/9] max-h-[700px] overflow-hidden">
       {/* Slides */}
       {activeSlides.map((slide, index) => (
         <div
