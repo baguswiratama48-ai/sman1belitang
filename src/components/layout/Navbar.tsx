@@ -107,38 +107,82 @@ export function Navbar() {
                   LAINNYA <ChevronDown className="ml-1 h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 bg-popover">
-                {menuItems.slice(7).map((item) => (
-                  <DropdownMenuItem key={item.label} asChild>
-                    {item.children ? (
-                      <div className="w-full">
-                        <span className="font-medium text-muted-foreground text-xs">{item.label}</span>
-                        <div className="pl-2 mt-1 space-y-1">
-                          {item.children.map((child) => (
-                            <Link
-                              key={child.href}
-                              to={child.external ? "#" : child.href}
-                              onClick={() => child.external && window.open(child.href, "_blank")}
-                              className="block text-sm py-1 hover:text-primary transition-colors"
-                            >
-                              {child.label}
-                            </Link>
-                          ))}
-                        </div>
+              <DropdownMenuContent align="end" className="w-80 p-4 bg-popover shadow-lg">
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Kolom Kiri */}
+                  <div className="space-y-4">
+                    {/* Agenda */}
+                    <div>
+                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Agenda</span>
+                      <div className="mt-2 space-y-1">
+                        <Link to="/agenda/kalender" className="block text-sm py-1 hover:text-primary transition-colors">
+                          Kalender Akademik
+                        </Link>
+                        <Link to="/agenda/kegiatan" className="block text-sm py-1 hover:text-primary transition-colors">
+                          Kegiatan Sekolah
+                        </Link>
                       </div>
-                    ) : (
-                      <Link
-                        to={item.href!}
-                        className={cn(
-                          "w-full",
-                          item.highlight && "text-accent font-semibold"
-                        )}
-                      >
-                        {item.label}
-                      </Link>
-                    )}
-                  </DropdownMenuItem>
-                ))}
+                    </div>
+                    
+                    {/* Informasi */}
+                    <div>
+                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Informasi</span>
+                      <div className="mt-2 space-y-1">
+                        <Link to="/informasi/pengumuman" className="block text-sm py-1 hover:text-primary transition-colors">
+                          Pengumuman
+                        </Link>
+                        <Link to="/informasi/berita" className="block text-sm py-1 hover:text-primary transition-colors">
+                          Berita Terbaru
+                        </Link>
+                      </div>
+                    </div>
+
+                    {/* PPDB */}
+                    <a 
+                      href="https://www.ppdbsman1belitang.sch.id/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="block text-sm font-semibold text-accent hover:text-accent/80 transition-colors py-1"
+                    >
+                      PPDB 2025
+                    </a>
+                  </div>
+
+                  {/* Kolom Kanan */}
+                  <div className="space-y-4">
+                    {/* Link Pendidikan */}
+                    <div>
+                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Link Pendidikan</span>
+                      <div className="mt-2 space-y-1">
+                        <a href="https://kemdikbud.go.id" target="_blank" rel="noopener noreferrer" className="block text-sm py-1 hover:text-primary transition-colors">
+                          Kemendikbud
+                        </a>
+                        <a href="https://disdik.sumselprov.go.id" target="_blank" rel="noopener noreferrer" className="block text-sm py-1 hover:text-primary transition-colors">
+                          Dinas Pendidikan Sumsel
+                        </a>
+                        <a href="https://ltmpt.ac.id" target="_blank" rel="noopener noreferrer" className="block text-sm py-1 hover:text-primary transition-colors">
+                          LTMPT
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* Organisasi */}
+                    <div>
+                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Organisasi</span>
+                      <div className="mt-2 space-y-1">
+                        <Link to="/ekskul" className="block text-sm py-1 hover:text-primary transition-colors">
+                          Ekstrakurikuler
+                        </Link>
+                        <Link to="/osis" className="block text-sm py-1 hover:text-primary transition-colors">
+                          OSIS
+                        </Link>
+                        <Link to="/alumni" className="block text-sm py-1 hover:text-primary transition-colors">
+                          Alumni
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
