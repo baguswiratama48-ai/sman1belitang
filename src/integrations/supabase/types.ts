@@ -98,6 +98,45 @@ export type Database = {
         }
         Relationships: []
       }
+      ekskul: {
+        Row: {
+          created_at: string
+          deskripsi: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          jadwal: string | null
+          nama: string
+          order_index: number | null
+          pembina: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deskripsi?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          jadwal?: string | null
+          nama: string
+          order_index?: number | null
+          pembina?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deskripsi?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          jadwal?: string | null
+          nama?: string
+          order_index?: number | null
+          pembina?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       fasilitas: {
         Row: {
           created_at: string
@@ -290,6 +329,45 @@ export type Database = {
         }
         Relationships: []
       }
+      osis: {
+        Row: {
+          created_at: string
+          foto_url: string | null
+          id: string
+          is_active: boolean | null
+          jabatan: string
+          kelas: string | null
+          nama: string
+          order_index: number | null
+          periode: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          foto_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          jabatan: string
+          kelas?: string | null
+          nama: string
+          order_index?: number | null
+          periode: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          foto_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          jabatan?: string
+          kelas?: string | null
+          nama?: string
+          order_index?: number | null
+          periode?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pengumuman: {
         Row: {
           content: string
@@ -322,6 +400,51 @@ export type Database = {
           is_published?: boolean
           published_at?: string | null
           title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      prestasi: {
+        Row: {
+          created_at: string
+          deskripsi: string | null
+          id: string
+          image_url: string | null
+          is_published: boolean | null
+          judul: string
+          kategori: string | null
+          order_index: number | null
+          peraih: string | null
+          tahun: string
+          tingkat: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deskripsi?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean | null
+          judul: string
+          kategori?: string | null
+          order_index?: number | null
+          peraih?: string | null
+          tahun: string
+          tingkat?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deskripsi?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean | null
+          judul?: string
+          kategori?: string | null
+          order_index?: number | null
+          peraih?: string | null
+          tahun?: string
+          tingkat?: string
           updated_at?: string
         }
         Relationships: []

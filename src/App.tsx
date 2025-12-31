@@ -22,6 +22,9 @@ import KelasAdmin from "./pages/admin/KelasAdmin";
 import FasilitasAdmin from "./pages/admin/FasilitasAdmin";
 import KalenderAdmin from "./pages/admin/KalenderAdmin";
 import AlumniAdmin from "./pages/admin/AlumniAdmin";
+import PrestasiAdmin from "./pages/admin/PrestasiAdmin";
+import EkskulAdmin from "./pages/admin/EkskulAdmin";
+import OsisAdmin from "./pages/admin/OsisAdmin";
 
 const queryClient = new QueryClient();
 
@@ -67,6 +70,9 @@ const App = () => (
               <Route path="fasilitas" element={<FasilitasAdmin />} />
               <Route path="kalender" element={<KalenderAdmin />} />
               <Route path="alumni" element={<AlumniAdmin />} />
+              <Route path="prestasi" element={<PrestasiAdmin />} />
+              <Route path="ekskul" element={<EkskulAdmin />} />
+              <Route path="osis" element={<OsisAdmin />} />
             </Route>
             
             <Route path="*" element={<NotFound />} />
