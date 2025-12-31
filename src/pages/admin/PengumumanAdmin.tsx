@@ -51,7 +51,7 @@ export default function PengumumanAdmin() {
       if (error) throw error;
       setPengumumanList(data || []);
     } catch (error) {
-      console.error("Error fetching pengumuman:", error);
+      if (import.meta.env.DEV) console.error("Error fetching pengumuman:", error);
       toast.error("Gagal memuat data pengumuman");
     } finally {
       setIsLoading(false);
@@ -93,8 +93,8 @@ export default function PengumumanAdmin() {
       resetForm();
       fetchPengumuman();
     } catch (error: any) {
-      console.error("Error saving pengumuman:", error);
-      toast.error(error.message || "Gagal menyimpan pengumuman");
+      if (import.meta.env.DEV) console.error("Error saving pengumuman:", error);
+      toast.error("Gagal menyimpan pengumuman");
     }
   };
 
@@ -119,7 +119,7 @@ export default function PengumumanAdmin() {
       toast.success("Pengumuman berhasil dihapus");
       fetchPengumuman();
     } catch (error) {
-      console.error("Error deleting pengumuman:", error);
+      if (import.meta.env.DEV) console.error("Error deleting pengumuman:", error);
       toast.error("Gagal menghapus pengumuman");
     }
   };
@@ -138,7 +138,7 @@ export default function PengumumanAdmin() {
       toast.success(pengumuman.is_published ? "Pengumuman disembunyikan" : "Pengumuman dipublikasikan");
       fetchPengumuman();
     } catch (error) {
-      console.error("Error toggling publish:", error);
+      if (import.meta.env.DEV) console.error("Error toggling publish:", error);
       toast.error("Gagal mengubah status publikasi");
     }
   };

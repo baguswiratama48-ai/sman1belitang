@@ -68,7 +68,7 @@ export default function AdminDashboard() {
         activePengumuman: activePengumuman || 0,
       });
     } catch (error) {
-      console.error("Error fetching stats:", error);
+      if (import.meta.env.DEV) console.error("Error fetching stats:", error);
     } finally {
       setIsLoading(false);
     }

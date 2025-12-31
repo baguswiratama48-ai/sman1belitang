@@ -54,7 +54,7 @@ export default function BeritaAdmin() {
       if (error) throw error;
       setBeritaList(data || []);
     } catch (error) {
-      console.error("Error fetching berita:", error);
+      if (import.meta.env.DEV) console.error("Error fetching berita:", error);
       toast.error("Gagal memuat data berita");
     } finally {
       setIsLoading(false);
@@ -106,8 +106,8 @@ export default function BeritaAdmin() {
       resetForm();
       fetchBerita();
     } catch (error: any) {
-      console.error("Error saving berita:", error);
-      toast.error(error.message || "Gagal menyimpan berita");
+      if (import.meta.env.DEV) console.error("Error saving berita:", error);
+      toast.error("Gagal menyimpan berita");
     }
   };
 
@@ -133,7 +133,7 @@ export default function BeritaAdmin() {
       toast.success("Berita berhasil dihapus");
       fetchBerita();
     } catch (error) {
-      console.error("Error deleting berita:", error);
+      if (import.meta.env.DEV) console.error("Error deleting berita:", error);
       toast.error("Gagal menghapus berita");
     }
   };
@@ -152,7 +152,7 @@ export default function BeritaAdmin() {
       toast.success(berita.is_published ? "Berita disembunyikan" : "Berita dipublikasikan");
       fetchBerita();
     } catch (error) {
-      console.error("Error toggling publish:", error);
+      if (import.meta.env.DEV) console.error("Error toggling publish:", error);
       toast.error("Gagal mengubah status publikasi");
     }
   };
