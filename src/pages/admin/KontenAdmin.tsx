@@ -199,15 +199,11 @@ function HeroSliderEditor({
   onSave: (value: HeroSlide[]) => void;
   isSaving: boolean;
 }) {
-  const [localSlides, setLocalSlides] = useState<HeroSlide[]>(slides);
-
-  const addSlide = () => {
-    setLocalSlides([...localSlides, { image: "", title: "", subtitle: "", description: "" }]);
-  };
-
-  const removeSlide = (index: number) => {
-    setLocalSlides(localSlides.filter((_, i) => i !== index));
-  };
+  // Initialize with 5 empty slots if no slides exist
+  const initialSlides: HeroSlide[] = Array.from({ length: 5 }, (_, i) => 
+    slides[i] || { image: "", title: "", subtitle: "", description: "" }
+  );
+  const [localSlides, setLocalSlides] = useState<HeroSlide[]>(initialSlides);
 
   const updateSlide = (index: number, field: keyof HeroSlide, value: string) => {
     const updated = [...localSlides];
@@ -215,31 +211,58 @@ function HeroSliderEditor({
     setLocalSlides(updated);
   };
 
+  // Filter out empty slides when saving
+  const handleSave = () => {
+    const filledSlides = localSlides.filter(slide => slide.image || slide.title || slide.subtitle || slide.description);
+    onSave(filledSlides.length > 0 ? filledSlides : localSlides.slice(0, 1));
+  };
+
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+      <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Image className="h-5 w-5" />
-          Slider Beranda
+          Slider Beranda (5 Slide)
         </CardTitle>
-        <Button onClick={addSlide} size="sm">
-          <Plus className="h-4 w-4 mr-2" />
-          Tambah Slide
-        </Button>
+        <p className="text-sm text-muted-foreground mt-2">
+          Kelola hingga 5 slide untuk hero section beranda
+        </p>
       </CardHeader>
       <CardContent className="space-y-6">
+        {/* Image Size Recommendation */}
+        <div className="bg-accent/10 border border-accent/30 rounded-lg p-4">
+          <h4 className="font-semibold text-accent-foreground mb-2 flex items-center gap-2">
+            📐 Ukuran Gambar yang Direkomendasikan
+          </h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div className="space-y-1">
+              <p className="font-medium text-foreground">Resolusi Optimal:</p>
+              <p className="text-muted-foreground">• <strong>1920 x 700 px</strong> (Lebar x Tinggi)</p>
+              <p className="text-muted-foreground">• Rasio aspek: 2.74:1</p>
+            </div>
+            <div className="space-y-1">
+              <p className="font-medium text-foreground">Alternatif:</p>
+              <p className="text-muted-foreground">• <strong>1600 x 600 px</strong> (Medium)</p>
+              <p className="text-muted-foreground">• <strong>1280 x 480 px</strong> (Minimum)</p>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3 border-t pt-2">
+            💡 Tips: Gunakan gambar landscape dengan format JPG atau WebP untuk hasil terbaik. Maksimal ukuran file 2MB.
+          </p>
+        </div>
+
         {localSlides.map((slide, index) => (
           <div key={index} className="border rounded-lg p-4 space-y-4">
             <div className="flex items-center justify-between">
-              <h4 className="font-medium">Slide {index + 1}</h4>
-              <Button 
-                variant="destructive" 
-                size="sm" 
-                onClick={() => removeSlide(index)}
-                disabled={localSlides.length <= 1}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+              <h4 className="font-medium flex items-center gap-2">
+                <span className="bg-primary text-primary-foreground w-6 h-6 rounded-full flex items-center justify-center text-sm">
+                  {index + 1}
+                </span>
+                Slide {index + 1}
+                {!slide.image && !slide.title && !slide.subtitle && (
+                  <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">(Kosong)</span>
+                )}
+              </h4>
             </div>
             <ImageUpload
               value={slide.image}
@@ -274,7 +297,7 @@ function HeroSliderEditor({
             </div>
           </div>
         ))}
-        <Button onClick={() => onSave(localSlides)} disabled={isSaving} className="w-full">
+        <Button onClick={handleSave} disabled={isSaving} className="w-full">
           {isSaving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
           Simpan Perubahan
         </Button>
