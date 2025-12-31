@@ -51,15 +51,22 @@ export interface KontakSettings {
   maps_embed: string;
 }
 
+export interface QuickLink {
+  label: string;
+  href: string;
+  external: boolean;
+}
+
 export interface FooterSettings {
   tagline: string;
-  facebook: string;
   instagram: string;
+  tiktok: string;
   youtube: string;
   jam_senin_kamis: string;
   jam_jumat: string;
   jam_sabtu: string;
   copyright: string;
+  quick_links: QuickLink[];
 }
 
 type SettingsKey = 'hero_slides' | 'ppdb' | 'visi_misi' | 'sambutan' | 'stats' | 'kontak' | 'footer';

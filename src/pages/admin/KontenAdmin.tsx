@@ -714,6 +714,19 @@ function KontakEditor({
   );
 }
 
+// TikTok icon component
+const TikTokIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+  </svg>
+);
+
+interface QuickLink {
+  label: string;
+  href: string;
+  external: boolean;
+}
+
 // Footer Editor
 function FooterEditor({ 
   data, 
@@ -726,14 +739,43 @@ function FooterEditor({
 }) {
   const [localData, setLocalData] = useState({
     tagline: (data.tagline as string) || "",
-    facebook: (data.facebook as string) || "",
     instagram: (data.instagram as string) || "",
+    tiktok: (data.tiktok as string) || "",
     youtube: (data.youtube as string) || "",
     jam_senin_kamis: (data.jam_senin_kamis as string) || "",
     jam_jumat: (data.jam_jumat as string) || "",
     jam_sabtu: (data.jam_sabtu as string) || "",
     copyright: (data.copyright as string) || "",
+    quick_links: (data.quick_links as QuickLink[]) || [
+      { label: "Profil Sekolah", href: "/profil/sejarah", external: false },
+      { label: "PPDB", href: "https://www.ppdbsman1belitang.sch.id/", external: true },
+      { label: "Galeri", href: "/galeri", external: false },
+      { label: "Berita & Pengumuman", href: "/informasi/berita", external: false },
+      { label: "Portal Siswa", href: "/login", external: false },
+      { label: "E-Learning", href: "/login", external: false },
+      { label: "Alumni", href: "/alumni", external: false },
+    ],
   });
+
+  const addQuickLink = () => {
+    setLocalData({
+      ...localData,
+      quick_links: [...localData.quick_links, { label: "", href: "", external: false }],
+    });
+  };
+
+  const removeQuickLink = (index: number) => {
+    setLocalData({
+      ...localData,
+      quick_links: localData.quick_links.filter((_, i) => i !== index),
+    });
+  };
+
+  const updateQuickLink = (index: number, field: keyof QuickLink, value: string | boolean) => {
+    const updated = [...localData.quick_links];
+    updated[index] = { ...updated[index], [field]: value };
+    setLocalData({ ...localData, quick_links: updated });
+  };
 
   return (
     <Card>
@@ -753,24 +795,44 @@ function FooterEditor({
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="text-sm font-medium">Facebook URL</label>
-            <Input
-              value={localData.facebook}
-              onChange={(e) => setLocalData({ ...localData, facebook: e.target.value })}
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium">Instagram URL</label>
+            <label className="text-sm font-medium flex items-center gap-2">
+              <span className="w-4 h-4 inline-block">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </span>
+              Instagram URL
+            </label>
             <Input
               value={localData.instagram}
               onChange={(e) => setLocalData({ ...localData, instagram: e.target.value })}
+              placeholder="https://instagram.com/..."
             />
           </div>
           <div>
-            <label className="text-sm font-medium">Youtube URL</label>
+            <label className="text-sm font-medium flex items-center gap-2">
+              <TikTokIcon className="w-4 h-4" />
+              TikTok URL
+            </label>
+            <Input
+              value={localData.tiktok}
+              onChange={(e) => setLocalData({ ...localData, tiktok: e.target.value })}
+              placeholder="https://tiktok.com/@..."
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium flex items-center gap-2">
+              <span className="w-4 h-4 inline-block">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </span>
+              YouTube URL
+            </label>
             <Input
               value={localData.youtube}
               onChange={(e) => setLocalData({ ...localData, youtube: e.target.value })}
+              placeholder="https://youtube.com/..."
             />
           </div>
         </div>
@@ -803,6 +865,45 @@ function FooterEditor({
             value={localData.copyright}
             onChange={(e) => setLocalData({ ...localData, copyright: e.target.value })}
           />
+        </div>
+
+        {/* Quick Links Editor */}
+        <div className="border-t pt-4">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="font-medium">Link Cepat</h4>
+            <Button onClick={addQuickLink} size="sm" variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Tambah Link
+            </Button>
+          </div>
+          {localData.quick_links.map((item, index) => (
+            <div key={index} className="flex gap-2 mb-2 items-center">
+              <Input
+                placeholder="Label"
+                value={item.label}
+                onChange={(e) => updateQuickLink(index, 'label', e.target.value)}
+                className="flex-1"
+              />
+              <Input
+                placeholder="URL/Path"
+                value={item.href}
+                onChange={(e) => updateQuickLink(index, 'href', e.target.value)}
+                className="flex-1"
+              />
+              <label className="flex items-center gap-1 text-xs whitespace-nowrap">
+                <input
+                  type="checkbox"
+                  checked={item.external}
+                  onChange={(e) => updateQuickLink(index, 'external', e.target.checked)}
+                  className="w-4 h-4"
+                />
+                External
+              </label>
+              <Button variant="destructive" size="icon" onClick={() => removeQuickLink(index)}>
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
         </div>
 
         <Button onClick={() => onSave(localData)} disabled={isSaving} className="w-full">
