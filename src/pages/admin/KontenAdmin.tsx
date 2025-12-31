@@ -452,7 +452,6 @@ function VisiMisiEditor({
   const [localData, setLocalData] = useState({
     visi: (data.visi as string) || "",
     misi: (data.misi as string[]) || [],
-    tujuan: (data.tujuan as string) || "",
   });
 
   const addMisi = () => {
@@ -474,7 +473,7 @@ function VisiMisiEditor({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Target className="h-5 w-5" />
-          Visi, Misi & Tujuan
+          Visi & Misi
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -506,15 +505,6 @@ function VisiMisiEditor({
               </Button>
             </div>
           ))}
-        </div>
-
-        <div>
-          <label className="text-sm font-medium">Tujuan Sekolah</label>
-          <Textarea
-            value={localData.tujuan}
-            onChange={(e) => setLocalData({ ...localData, tujuan: e.target.value })}
-            rows={4}
-          />
         </div>
 
         <Button onClick={() => onSave(localData)} disabled={isSaving} className="w-full">
