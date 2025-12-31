@@ -10,8 +10,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import logoSmansa from "@/assets/logo-smansa.png";
+import { useSiteSetting, NavMenuSettings } from "@/hooks/useSiteSettings";
 
-const menuItems = [
+interface MenuItem {
+  label: string;
+  href?: string;
+  external?: boolean;
+  highlight?: boolean;
+  children?: { label: string; href: string; external?: boolean }[];
+}
+
+const defaultMenuItems: MenuItem[] = [
   { label: "BERANDA", href: "/" },
   { label: "GALERI", href: "/galeri" },
   {
@@ -46,7 +55,7 @@ const menuItems = [
       { label: "Berita Terbaru", href: "/informasi/berita" },
     ],
   },
-  { label: "PPDB 2025", href: "https://www.ppdbsman1belitang.sch.id/", highlight: true, external: true },
+  { label: "PPDB", href: "https://www.ppdbsman1belitang.sch.id/", highlight: true, external: true },
   {
     label: "LINK PENDIDIKAN",
     children: [
@@ -63,6 +72,11 @@ const menuItems = [
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { data: navbarSettings } = useSiteSetting<NavMenuSettings>('navbar');
+
+  const menuItems: MenuItem[] = navbarSettings?.items && navbarSettings.items.length > 0 
+    ? navbarSettings.items 
+    : defaultMenuItems;
 
   const isActive = (href: string) => location.pathname === href;
 
@@ -219,7 +233,7 @@ export function Navbar() {
 }
 
 interface NavItemProps {
-  item: typeof menuItems[0];
+  item: MenuItem;
   isActive: (href: string) => boolean;
 }
 
