@@ -1,7 +1,14 @@
 import { Link } from "react-router-dom";
-import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Youtube } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Instagram, Youtube } from "lucide-react";
 import logoSmansa from "@/assets/logo-smansa.png";
 import { useSiteSetting, FooterSettings, KontakSettings } from "@/hooks/useSiteSettings";
+
+// TikTok icon component
+const TikTokIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+  </svg>
+);
 
 export function Footer() {
   const { data: footer } = useSiteSetting<FooterSettings>('footer');
@@ -9,13 +16,14 @@ export function Footer() {
 
   const defaultFooter: FooterSettings = {
     tagline: "Menjadi SMA Prima yang berpacu meraih Prestasi Luhur Budi Pekerti",
-    facebook: "",
     instagram: "",
+    tiktok: "",
     youtube: "",
     jam_senin_kamis: "07:00 - 15:00",
     jam_jumat: "07:00 - 11:30",
     jam_sabtu: "07:00 - 12:00",
     copyright: "© 2025 SMAN 1 Belitang. Hak Cipta Dilindungi.",
+    quick_links: [],
   };
 
   const defaultKontak: KontakSettings = {
@@ -37,7 +45,7 @@ export function Footer() {
           {/* School Info */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <img src={logoSmansa} alt="Logo SMAN 1 Belitang" className="w-14 h-16 object-contain bg-white rounded-lg p-1" />
+              <img src={logoSmansa} alt="Logo SMAN 1 Belitang" className="w-14 h-16 object-contain" />
               <div>
                 <h3 className="font-bold text-lg">SMAN 1 BELITANG</h3>
                 <p className="text-sm opacity-80">OKU Timur, Sumsel</p>
@@ -75,16 +83,16 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-lg mb-4">Link Cepat</h4>
             <ul className="space-y-2 text-sm">
-              {[
-                { label: "Profil Sekolah", href: "/profil/sejarah" },
-                { label: "PPDB 2025", href: "https://www.ppdbsman1belitang.sch.id/", external: true },
-                { label: "Galeri", href: "/galeri" },
-                { label: "Berita & Pengumuman", href: "/informasi/berita" },
-                { label: "Portal Siswa", href: "/login" },
-                { label: "E-Learning", href: "/login" },
-                { label: "Alumni", href: "/alumni" },
-              ].map((link) => (
-                <li key={link.href}>
+              {(footerData.quick_links && footerData.quick_links.length > 0 ? footerData.quick_links : [
+                { label: "Profil Sekolah", href: "/profil/sejarah", external: false },
+                { label: "PPDB", href: "https://www.ppdbsman1belitang.sch.id/", external: true },
+                { label: "Galeri", href: "/galeri", external: false },
+                { label: "Berita & Pengumuman", href: "/informasi/berita", external: false },
+                { label: "Portal Siswa", href: "/login", external: false },
+                { label: "E-Learning", href: "/login", external: false },
+                { label: "Alumni", href: "/alumni", external: false },
+              ]).map((link, index) => (
+                <li key={`${link.href}-${index}`}>
                   {link.external ? (
                     <a
                       href={link.href}
@@ -111,16 +119,6 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-lg mb-4">Media Sosial</h4>
             <div className="flex gap-3 mb-6">
-              {footerData.facebook && (
-                <a
-                  href={footerData.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors"
-                >
-                  <Facebook className="h-5 w-5" />
-                </a>
-              )}
               {footerData.instagram && (
                 <a
                   href={footerData.instagram}
@@ -129,6 +127,16 @@ export function Footer() {
                   className="w-10 h-10 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors"
                 >
                   <Instagram className="h-5 w-5" />
+                </a>
+              )}
+              {footerData.tiktok && (
+                <a
+                  href={footerData.tiktok}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-primary-foreground/10 rounded-full flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors"
+                >
+                  <TikTokIcon className="h-5 w-5" />
                 </a>
               )}
               {footerData.youtube && (
@@ -141,13 +149,13 @@ export function Footer() {
                   <Youtube className="h-5 w-5" />
                 </a>
               )}
-              {!footerData.facebook && !footerData.instagram && !footerData.youtube && (
+              {!footerData.instagram && !footerData.tiktok && !footerData.youtube && (
                 <>
                   <span className="w-10 h-10 bg-primary-foreground/10 rounded-full flex items-center justify-center">
-                    <Facebook className="h-5 w-5" />
+                    <Instagram className="h-5 w-5" />
                   </span>
                   <span className="w-10 h-10 bg-primary-foreground/10 rounded-full flex items-center justify-center">
-                    <Instagram className="h-5 w-5" />
+                    <TikTokIcon className="h-5 w-5" />
                   </span>
                   <span className="w-10 h-10 bg-primary-foreground/10 rounded-full flex items-center justify-center">
                     <Youtube className="h-5 w-5" />
@@ -170,7 +178,7 @@ export function Footer() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-2 text-sm opacity-80">
             <p>{footerData.copyright}</p>
-            <p>Dikembangkan dengan ❤️ untuk Pendidikan Indonesia</p>
+            <p>Dikembangkan Tim IT SMAN 1 Belitang</p>
           </div>
         </div>
       </div>
