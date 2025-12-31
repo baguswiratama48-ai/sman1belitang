@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { GraduationCap, MapPin, Phone, Mail, Clock, Facebook, Instagram, Youtube } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Youtube } from "lucide-react";
+import logoSmansa from "@/assets/logo-smansa.png";
 
 export function Footer() {
   return (
@@ -10,9 +11,7 @@ export function Footer() {
           {/* School Info */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
-                <GraduationCap className="h-7 w-7 text-accent-foreground" />
-              </div>
+              <img src={logoSmansa} alt="Logo SMAN 1 Belitang" className="w-14 h-16 object-contain bg-white rounded-lg p-1" />
               <div>
                 <h3 className="font-bold text-lg">SMAN 1 BELITANG</h3>
                 <p className="text-sm opacity-80">OKU Timur, Sumsel</p>
@@ -54,7 +53,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm">
               {[
                 { label: "Profil Sekolah", href: "/profil/sejarah" },
-                { label: "PPDB 2025", href: "/ppdb" },
+                { label: "PPDB 2025", href: "https://www.ppdbsman1belitang.sch.id/", external: true },
                 { label: "Galeri", href: "/galeri" },
                 { label: "Berita & Pengumuman", href: "/informasi/berita" },
                 { label: "Portal Siswa", href: "/login" },
@@ -62,12 +61,23 @@ export function Footer() {
                 { label: "Alumni", href: "/alumni" },
               ].map((link) => (
                 <li key={link.href}>
-                  <Link
-                    to={link.href}
-                    className="opacity-80 hover:opacity-100 hover:text-accent transition-colors"
-                  >
-                    {link.label}
-                  </Link>
+                  {link.external ? (
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="opacity-80 hover:opacity-100 hover:text-accent transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      to={link.href}
+                      className="opacity-80 hover:opacity-100 hover:text-accent transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

@@ -30,7 +30,7 @@ export function PPDBSection() {
               </div>
             </div>
             <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-              <Link to="/ppdb">Daftar Sekarang</Link>
+              <a href="https://www.ppdbsman1belitang.sch.id/" target="_blank" rel="noopener noreferrer">Daftar Sekarang</a>
             </Button>
           </div>
 
