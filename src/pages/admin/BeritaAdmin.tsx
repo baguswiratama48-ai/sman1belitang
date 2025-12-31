@@ -4,12 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { Plus, Edit, Trash2, Eye, EyeOff } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, EyeOff, Search, Filter } from "lucide-react";
+import { ImageUpload } from "@/components/admin/ImageUpload";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
 import { id as idLocale } from "date-fns/locale";
 
@@ -169,11 +172,21 @@ export default function BeritaAdmin() {
     });
   };
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterCategory, setFilterCategory] = useState("all");
+
+  const filteredBerita = beritaList.filter((berita) => {
+    const matchesSearch = berita.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = filterCategory === "all" || berita.category === filterCategory;
+    return matchesSearch && matchesCategory;
+  });
+
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Kelola Berita</h1>
+          <h1 className="text-2xl font-bold text-foreground">Kelola Berita</h1>
           <p className="text-muted-foreground">Tambah, edit, dan hapus berita sekolah</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={(open) => {
@@ -181,13 +194,13 @@ export default function BeritaAdmin() {
           if (!open) resetForm();
         }}>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="bg-[hsl(var(--admin-primary))] hover:bg-[hsl(var(--admin-primary-light))] shadow-lg">
               <Plus className="mr-2 h-4 w-4" /> Tambah Berita
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>{editingBerita ? "Edit Berita" : "Tambah Berita Baru"}</DialogTitle>
+              <DialogTitle className="text-xl">{editingBerita ? "Edit Berita" : "Tambah Berita Baru"}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 mt-4">
               <div className="space-y-2">
@@ -197,6 +210,7 @@ export default function BeritaAdmin() {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="Judul berita"
+                  className="rounded-xl"
                   required
                 />
               </div>
@@ -208,6 +222,7 @@ export default function BeritaAdmin() {
                   onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                   placeholder="Ringkasan singkat berita"
                   rows={2}
+                  className="rounded-xl"
                 />
               </div>
               <div className="space-y-2">
@@ -218,31 +233,29 @@ export default function BeritaAdmin() {
                   onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                   placeholder="Isi berita lengkap"
                   rows={6}
+                  className="rounded-xl"
                   required
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="image_url">URL Gambar</Label>
-                <Input
-                  id="image_url"
-                  value={formData.image_url}
-                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                  placeholder="https://example.com/image.jpg"
-                />
-              </div>
+              <ImageUpload
+                value={formData.image_url}
+                onChange={(url) => setFormData({ ...formData, image_url: url })}
+                label="Gambar Utama"
+                folder="berita"
+              />
               <div className="space-y-2">
                 <Label htmlFor="category">Kategori</Label>
-                <select
-                  id="category"
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-md bg-background"
-                >
-                  <option value="umum">Umum</option>
-                  <option value="akademik">Akademik</option>
-                  <option value="prestasi">Prestasi</option>
-                  <option value="kegiatan">Kegiatan</option>
-                </select>
+                <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
+                  <SelectTrigger className="rounded-xl">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="umum">Umum</SelectItem>
+                    <SelectItem value="akademik">Akademik</SelectItem>
+                    <SelectItem value="prestasi">Prestasi</SelectItem>
+                    <SelectItem value="kegiatan">Kegiatan</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div className="flex items-center gap-2">
                 <Switch
@@ -253,10 +266,10 @@ export default function BeritaAdmin() {
                 <Label htmlFor="is_published">Publikasikan sekarang</Label>
               </div>
               <div className="flex justify-end gap-2 pt-4">
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)} className="rounded-xl">
                   Batal
                 </Button>
-                <Button type="submit">
+                <Button type="submit" className="rounded-xl bg-[hsl(var(--admin-primary))] hover:bg-[hsl(var(--admin-primary-light))]">
                   {editingBerita ? "Simpan Perubahan" : "Tambah Berita"}
                 </Button>
               </div>
@@ -265,54 +278,123 @@ export default function BeritaAdmin() {
         </Dialog>
       </div>
 
-      <Card>
+      {/* Filters */}
+      <Card className="border-0 shadow-lg">
+        <CardContent className="p-4">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Cari berita..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 rounded-xl bg-[hsl(var(--admin-sidebar))] border-0"
+              />
+            </div>
+            <Select value={filterCategory} onValueChange={setFilterCategory}>
+              <SelectTrigger className="w-full sm:w-40 rounded-xl">
+                <Filter className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Kategori" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua</SelectItem>
+                <SelectItem value="umum">Umum</SelectItem>
+                <SelectItem value="akademik">Akademik</SelectItem>
+                <SelectItem value="prestasi">Prestasi</SelectItem>
+                <SelectItem value="kegiatan">Kegiatan</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Table */}
+      <Card className="border-0 shadow-lg overflow-hidden">
         <CardContent className="p-0">
           {isLoading ? (
-            <div className="p-8 text-center text-muted-foreground">Memuat...</div>
-          ) : beritaList.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">
-              Belum ada berita. Klik "Tambah Berita" untuk membuat berita pertama.
+              <div className="h-8 w-8 border-4 border-[hsl(var(--admin-primary))] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+              Memuat...
+            </div>
+          ) : filteredBerita.length === 0 ? (
+            <div className="p-12 text-center text-muted-foreground">
+              <div className="inline-flex p-4 rounded-full bg-muted mb-4">
+                <Search className="h-8 w-8" />
+              </div>
+              <p className="font-medium">Tidak ada berita ditemukan</p>
+              <p className="text-sm mt-1">Coba ubah filter atau tambah berita baru</p>
             </div>
           ) : (
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>Judul</TableHead>
-                  <TableHead>Kategori</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Tanggal</TableHead>
-                  <TableHead className="text-right">Aksi</TableHead>
+                <TableRow className="bg-[hsl(var(--admin-sidebar))] hover:bg-[hsl(var(--admin-sidebar))]">
+                  <TableHead className="font-semibold">Judul</TableHead>
+                  <TableHead className="font-semibold">Kategori</TableHead>
+                  <TableHead className="font-semibold">Status</TableHead>
+                  <TableHead className="font-semibold">Tanggal</TableHead>
+                  <TableHead className="text-right font-semibold">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {beritaList.map((berita) => (
-                  <TableRow key={berita.id}>
-                    <TableCell className="font-medium max-w-xs truncate">{berita.title}</TableCell>
-                    <TableCell className="capitalize">{berita.category}</TableCell>
+                {filteredBerita.map((berita) => (
+                  <TableRow key={berita.id} className="hover:bg-[hsl(var(--admin-sidebar))]/50">
                     <TableCell>
-                      <span
-                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                          berita.is_published
-                            ? "bg-green-100 text-green-700"
-                            : "bg-gray-100 text-gray-700"
-                        }`}
+                      <div className="flex items-center gap-3">
+                        {berita.image_url && (
+                          <img 
+                            src={berita.image_url} 
+                            alt="" 
+                            className="h-10 w-10 rounded-lg object-cover"
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                          />
+                        )}
+                        <span className="font-medium max-w-xs truncate">{berita.title}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="secondary" className="capitalize rounded-lg">
+                        {berita.category}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge 
+                        variant={berita.is_published ? "default" : "outline"}
+                        className={berita.is_published 
+                          ? "bg-[hsl(var(--admin-success))]/10 text-[hsl(var(--admin-success))] hover:bg-[hsl(var(--admin-success))]/20 border-0" 
+                          : ""
+                        }
                       >
-                        {berita.is_published ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
+                        {berita.is_published ? <Eye className="h-3 w-3 mr-1" /> : <EyeOff className="h-3 w-3 mr-1" />}
                         {berita.is_published ? "Publik" : "Draft"}
-                      </span>
+                      </Badge>
                     </TableCell>
                     <TableCell className="text-muted-foreground text-sm">
                       {format(new Date(berita.created_at), "d MMM yyyy", { locale: idLocale })}
                     </TableCell>
                     <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button size="sm" variant="ghost" onClick={() => togglePublish(berita)}>
+                      <div className="flex justify-end gap-1">
+                        <Button 
+                          size="icon" 
+                          variant="ghost" 
+                          onClick={() => togglePublish(berita)}
+                          className="h-8 w-8 rounded-lg hover:bg-[hsl(var(--admin-primary))]/10"
+                        >
                           {berita.is_published ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </Button>
-                        <Button size="sm" variant="ghost" onClick={() => handleEdit(berita)}>
+                        <Button 
+                          size="icon" 
+                          variant="ghost" 
+                          onClick={() => handleEdit(berita)}
+                          className="h-8 w-8 rounded-lg hover:bg-[hsl(var(--admin-primary))]/10"
+                        >
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button size="sm" variant="ghost" className="text-destructive" onClick={() => handleDelete(berita.id)}>
+                        <Button 
+                          size="icon" 
+                          variant="ghost" 
+                          onClick={() => handleDelete(berita.id)}
+                          className="h-8 w-8 rounded-lg text-destructive hover:bg-destructive/10"
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
