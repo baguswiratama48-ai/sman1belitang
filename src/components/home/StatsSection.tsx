@@ -1,16 +1,27 @@
 import { useEffect, useState, useRef } from "react";
 import { Users, Building, Trophy, Calendar } from "lucide-react";
-
-const stats = [
-  { icon: Users, value: 1200, suffix: "+", label: "Jumlah Siswa" },
-  { icon: Building, value: 50, suffix: "+", label: "Fasilitas" },
-  { icon: Trophy, value: 100, suffix: "+", label: "Prestasi" },
-  { icon: Calendar, value: 1985, suffix: "", label: "Tahun Berdiri" },
-];
+import { useSiteSetting, StatsSettings } from "@/hooks/useSiteSettings";
 
 export function StatsSection() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const { data: statsData, isLoading } = useSiteSetting<StatsSettings>('stats');
+
+  const defaultStats: StatsSettings = {
+    jumlah_siswa: 1200,
+    fasilitas: 50,
+    prestasi: 100,
+    tahun_berdiri: 1985,
+  };
+
+  const data = statsData || defaultStats;
+
+  const stats = [
+    { icon: Users, value: data.jumlah_siswa, suffix: "+", label: "Jumlah Siswa" },
+    { icon: Building, value: data.fasilitas, suffix: "+", label: "Fasilitas" },
+    { icon: Trophy, value: data.prestasi, suffix: "+", label: "Prestasi" },
+    { icon: Calendar, value: data.tahun_berdiri, suffix: "", label: "Tahun Berdiri" },
+  ];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -28,6 +39,10 @@ export function StatsSection() {
 
     return () => observer.disconnect();
   }, []);
+
+  if (isLoading) {
+    return <section className="py-16 bg-primary animate-pulse h-48" />;
+  }
 
   return (
     <section ref={sectionRef} className="py-16 bg-primary text-primary-foreground">

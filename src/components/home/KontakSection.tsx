@@ -5,14 +5,26 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useSiteSetting, KontakSettings } from "@/hooks/useSiteSettings";
 
 export function KontakSection() {
   const { toast } = useToast();
+  const { data: kontak, isLoading } = useSiteSetting<KontakSettings>('kontak');
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
   });
+
+  const defaultKontak: KontakSettings = {
+    alamat: "Jln. Marga Pemuka Bangsa Raja No.1001 Gumawang Belitang, Kab. OKU Timur, Sumatera Selatan 32382",
+    telepon: "0735-450106",
+    email: "sman1belitang@gmail.com",
+    jam_operasional: "Senin - Sabtu: 07:00 - 15:00 WIB",
+    maps_embed: "",
+  };
+
+  const data = kontak || defaultKontak;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +34,10 @@ export function KontakSection() {
     });
     setFormData({ name: "", email: "", message: "" });
   };
+
+  if (isLoading) {
+    return <section className="py-16 bg-background animate-pulse h-96" />;
+  }
 
   return (
     <section className="py-16 bg-background">
@@ -47,10 +63,7 @@ export function KontakSection() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-foreground">Alamat</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Jln. Marga Pemuka Bangsa Raja No.1001 Gumawang Belitang, 
-                      Kab. OKU Timur, Sumatera Selatan 32382
-                    </p>
+                    <p className="text-sm text-muted-foreground">{data.alamat}</p>
                   </div>
                 </div>
 
@@ -60,7 +73,7 @@ export function KontakSection() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-foreground">Telepon</h4>
-                    <p className="text-sm text-muted-foreground">0735-450106</p>
+                    <p className="text-sm text-muted-foreground">{data.telepon}</p>
                   </div>
                 </div>
 
@@ -70,7 +83,7 @@ export function KontakSection() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-foreground">Email</h4>
-                    <p className="text-sm text-muted-foreground">sman1belitang@gmail.com</p>
+                    <p className="text-sm text-muted-foreground">{data.email}</p>
                   </div>
                 </div>
 
@@ -80,25 +93,27 @@ export function KontakSection() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-foreground">Jam Operasional</h4>
-                    <p className="text-sm text-muted-foreground">Senin - Sabtu: 07:00 - 15:00 WIB</p>
+                    <p className="text-sm text-muted-foreground">{data.jam_operasional}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             {/* Map */}
-            <div className="h-64 rounded-xl overflow-hidden border border-border">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3982.5!2d104.5!3d-4.0!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNMKwMDAnMDAuMCJTIDEwNMKwMzAnMDAuMCJF!5e0!3m2!1sen!2sid!4v1234567890"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Lokasi SMAN 1 Belitang"
-              />
-            </div>
+            {data.maps_embed && (
+              <div className="h-64 rounded-xl overflow-hidden border border-border">
+                <iframe
+                  src={data.maps_embed}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Lokasi SMAN 1 Belitang"
+                />
+              </div>
+            )}
           </div>
 
           {/* Contact Form */}

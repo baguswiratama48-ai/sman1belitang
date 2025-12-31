@@ -1,28 +1,28 @@
 import { Target, Eye, Clock, Heart, BookOpen, Sparkles, Users } from "lucide-react";
+import { useSiteSetting, VisiMisiSettings } from "@/hooks/useSiteSettings";
+
+const misiIcons = [Clock, Heart, BookOpen, Sparkles, Users];
 
 export function VisiMisiSection() {
-  const misi = [
-    {
-      icon: Clock,
-      text: "Membudayakan sikap disiplin",
-    },
-    {
-      icon: Heart,
-      text: "Menumbuhkan penghayatan ajaran-ajaran agama dan budaya",
-    },
-    {
-      icon: BookOpen,
-      text: "Meningkatkan prestasi akademik",
-    },
-    {
-      icon: Sparkles,
-      text: "Membekali keterampilan dan kecakapan hidup",
-    },
-    {
-      icon: Users,
-      text: "Mewujudkan fisik sekolah dan warga sekolah berpenampilan menarik",
-    },
-  ];
+  const { data: visiMisi, isLoading } = useSiteSetting<VisiMisiSettings>('visi_misi');
+
+  const defaultData: VisiMisiSettings = {
+    visi: "Menjadi SMA Prima yang berpacu meraih Prestasi Luhur Budi Pekerti",
+    misi: [
+      "Membudayakan sikap disiplin",
+      "Menumbuhkan penghayatan ajaran-ajaran agama dan budaya",
+      "Meningkatkan prestasi akademik",
+      "Membekali keterampilan dan kecakapan hidup",
+      "Mewujudkan fisik sekolah dan warga sekolah berpenampilan menarik",
+    ],
+    tujuan: "Meningkatkan kecerdasan, pengetahuan, kepribadian, imtaq, akhlak mulia, serta keterampilan berbasis teknologi informasi untuk hidup mandiri dan mengikuti pendidikan lebih lanjut."
+  };
+
+  const data = visiMisi || defaultData;
+
+  if (isLoading) {
+    return <section className="py-16 bg-background animate-pulse h-96" />;
+  }
 
   return (
     <section className="py-16 bg-background">
@@ -49,8 +49,7 @@ export function VisiMisiSection() {
                 <h3 className="text-2xl font-bold">Visi</h3>
               </div>
               <p className="text-xl md:text-2xl font-medium leading-relaxed">
-                "Menjadi SMA Prima yang berpacu meraih{" "}
-                <span className="text-accent">Prestasi Luhur Budi Pekerti</span>"
+                "{data.visi}"
               </p>
             </div>
           </div>
@@ -64,14 +63,17 @@ export function VisiMisiSection() {
               <h3 className="text-2xl font-bold text-foreground">Misi</h3>
             </div>
             <ul className="space-y-4">
-              {misi.map((item, index) => (
-                <li key={index} className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                    <item.icon className="h-4 w-4 text-accent" />
-                  </div>
-                  <p className="text-muted-foreground">{item.text}</p>
-                </li>
-              ))}
+              {data.misi.map((item, index) => {
+                const Icon = misiIcons[index % misiIcons.length];
+                return (
+                  <li key={index} className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                      <Icon className="h-4 w-4 text-accent" />
+                    </div>
+                    <p className="text-muted-foreground">{item}</p>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
@@ -80,13 +82,7 @@ export function VisiMisiSection() {
         <div className="mt-12 bg-muted rounded-2xl p-8 text-center">
           <h3 className="text-xl font-bold text-foreground mb-4">Tujuan Sekolah</h3>
           <p className="text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            Meningkatkan <span className="text-primary font-medium">kecerdasan</span>,{" "}
-            <span className="text-primary font-medium">pengetahuan</span>,{" "}
-            <span className="text-primary font-medium">kepribadian</span>,{" "}
-            <span className="text-accent font-medium">imtaq</span>,{" "}
-            <span className="text-accent font-medium">akhlak mulia</span>, serta{" "}
-            <span className="text-primary font-medium">keterampilan berbasis teknologi informasi</span>{" "}
-            untuk hidup mandiri dan mengikuti pendidikan lebih lanjut.
+            {data.tujuan}
           </p>
         </div>
       </div>

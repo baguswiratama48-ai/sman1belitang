@@ -15,7 +15,8 @@ import {
   ChevronDown,
   Bell,
   Search,
-  Settings
+  Settings,
+  FileEdit
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import logoSmansa from "@/assets/logo-smansa.png";
@@ -30,6 +31,7 @@ import { Input } from "@/components/ui/input";
 
 const menuItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
+  { label: "Konten Beranda", href: "/admin/konten", icon: FileEdit },
   { label: "Berita", href: "/admin/berita", icon: Newspaper },
   { label: "Galeri", href: "/admin/galeri", icon: Image },
   { label: "Pengumuman", href: "/admin/pengumuman", icon: Megaphone },
