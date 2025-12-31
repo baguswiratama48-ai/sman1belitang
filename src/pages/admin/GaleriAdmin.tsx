@@ -49,7 +49,7 @@ export default function GaleriAdmin() {
       if (error) throw error;
       setGaleriList(data || []);
     } catch (error) {
-      console.error("Error fetching galeri:", error);
+      if (import.meta.env.DEV) console.error("Error fetching galeri:", error);
       toast.error("Gagal memuat data galeri");
     } finally {
       setIsLoading(false);
@@ -90,8 +90,8 @@ export default function GaleriAdmin() {
       resetForm();
       fetchGaleri();
     } catch (error: any) {
-      console.error("Error saving galeri:", error);
-      toast.error(error.message || "Gagal menyimpan gambar");
+      if (import.meta.env.DEV) console.error("Error saving galeri:", error);
+      toast.error("Gagal menyimpan gambar");
     }
   };
 
@@ -116,7 +116,7 @@ export default function GaleriAdmin() {
       toast.success("Gambar berhasil dihapus");
       fetchGaleri();
     } catch (error) {
-      console.error("Error deleting galeri:", error);
+      if (import.meta.env.DEV) console.error("Error deleting galeri:", error);
       toast.error("Gagal menghapus gambar");
     }
   };
@@ -132,7 +132,7 @@ export default function GaleriAdmin() {
       toast.success(galeri.is_published ? "Gambar disembunyikan" : "Gambar dipublikasikan");
       fetchGaleri();
     } catch (error) {
-      console.error("Error toggling publish:", error);
+      if (import.meta.env.DEV) console.error("Error toggling publish:", error);
       toast.error("Gagal mengubah status publikasi");
     }
   };
