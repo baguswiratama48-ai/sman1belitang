@@ -15,8 +15,6 @@ import {
   ChevronDown,
   Bell,
   Search,
-  Settings,
-  FileEdit,
   History,
   Network,
   Users,
@@ -39,7 +37,6 @@ import { Input } from "@/components/ui/input";
 
 const menuItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Konten Beranda", href: "/admin/konten", icon: FileEdit },
   { label: "Berita", href: "/admin/berita", icon: Newspaper },
   { label: "Galeri", href: "/admin/galeri", icon: Image },
   { label: "Pengumuman", href: "/admin/pengumuman", icon: Megaphone },
@@ -106,13 +103,13 @@ export function AdminLayout() {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed top-0 left-0 z-40 h-screen bg-card border-r border-border transition-all duration-300 shadow-lg lg:translate-x-0",
+          "fixed top-0 left-0 z-40 h-screen bg-card border-r border-border transition-all duration-300 shadow-lg lg:translate-x-0 flex flex-col",
           sidebarOpen ? "translate-x-0" : "-translate-x-full",
           sidebarCollapsed ? "w-20" : "w-[270px]"
         )}
       >
         {/* Sidebar Header */}
-        <div className="h-[70px] flex items-center gap-3 px-5 border-b border-border bg-gradient-to-r from-[hsl(var(--admin-primary))] to-[hsl(var(--admin-primary-light))]">
+        <div className="h-[70px] flex-shrink-0 flex items-center gap-3 px-5 border-b border-border bg-gradient-to-r from-[hsl(var(--admin-primary))] to-[hsl(var(--admin-primary-light))]">
           <img src={logoSmansa} alt="Logo" className="h-10 w-10 rounded-lg bg-white/10 p-1" />
           {!sidebarCollapsed && (
             <div className="overflow-hidden">
@@ -122,63 +119,66 @@ export function AdminLayout() {
           )}
         </div>
 
-        {/* Menu Label */}
-        {!sidebarCollapsed && (
-          <div className="px-6 pt-6 pb-2">
-            <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Menu Utama</span>
-          </div>
-        )}
+        {/* Scrollable Navigation Area */}
+        <div className="flex-1 overflow-y-auto pb-24">
+          {/* Menu Label */}
+          {!sidebarCollapsed && (
+            <div className="px-6 pt-6 pb-2">
+              <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Menu Utama</span>
+            </div>
+          )}
 
-        {/* Navigation */}
-        <nav className={cn("px-4 py-2 space-y-1", sidebarCollapsed && "px-2")}>
-          {menuItems.map((item) => {
-            const isActive = location.pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                to={item.href}
-                onClick={() => setSidebarOpen(false)}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group",
-                  isActive
-                    ? "bg-[hsl(var(--admin-primary))] text-white shadow-lg shadow-[hsl(var(--admin-primary))]/30"
-                    : "text-muted-foreground hover:bg-[hsl(var(--admin-sidebar))] hover:text-foreground",
-                  sidebarCollapsed && "justify-center px-3"
-                )}
-              >
-                <item.icon className={cn(
-                  "h-5 w-5 transition-transform group-hover:scale-110",
-                  isActive && "text-white"
-                )} />
-                {!sidebarCollapsed && <span>{item.label}</span>}
-              </Link>
-            );
-          })}
-        </nav>
+          {/* Navigation */}
+          <nav className={cn("px-4 py-2 space-y-1", sidebarCollapsed && "px-2")}>
+            {menuItems.map((item) => {
+              const isActive = location.pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  onClick={() => setSidebarOpen(false)}
+                  className={cn(
+                    "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group",
+                    isActive
+                      ? "bg-[hsl(var(--admin-primary))] text-white shadow-lg shadow-[hsl(var(--admin-primary))]/30"
+                      : "text-muted-foreground hover:bg-[hsl(var(--admin-sidebar))] hover:text-foreground",
+                    sidebarCollapsed && "justify-center px-3"
+                  )}
+                >
+                  <item.icon className={cn(
+                    "h-5 w-5 transition-transform group-hover:scale-110",
+                    isActive && "text-white"
+                  )} />
+                  {!sidebarCollapsed && <span>{item.label}</span>}
+                </Link>
+              );
+            })}
+          </nav>
 
-        {/* Divider */}
-        <div className="my-4 mx-4 border-t border-border"></div>
+          {/* Divider */}
+          <div className="my-4 mx-4 border-t border-border"></div>
 
-        {/* Quick Links Label */}
-        {!sidebarCollapsed && (
-          <div className="px-6 pb-2">
-            <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Akses Cepat</span>
-          </div>
-        )}
+          {/* Quick Links Label */}
+          {!sidebarCollapsed && (
+            <div className="px-6 pb-2">
+              <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Akses Cepat</span>
+            </div>
+          )}
 
-        {/* Quick Links */}
-        <nav className={cn("px-4 space-y-1", sidebarCollapsed && "px-2")}>
-          <Link
-            to="/"
-            className={cn(
-              "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:bg-[hsl(var(--admin-sidebar))] hover:text-foreground transition-all duration-200",
-              sidebarCollapsed && "justify-center px-3"
-            )}
-          >
-            <Home className="h-5 w-5" />
-            {!sidebarCollapsed && <span>Lihat Website</span>}
-          </Link>
-        </nav>
+          {/* Quick Links */}
+          <nav className={cn("px-4 space-y-1", sidebarCollapsed && "px-2")}>
+            <Link
+              to="/"
+              className={cn(
+                "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:bg-[hsl(var(--admin-sidebar))] hover:text-foreground transition-all duration-200",
+                sidebarCollapsed && "justify-center px-3"
+              )}
+            >
+              <Home className="h-5 w-5" />
+              {!sidebarCollapsed && <span>Lihat Website</span>}
+            </Link>
+          </nav>
+        </div>
 
         {/* User Profile Section - Bottom */}
         <div className={cn(
