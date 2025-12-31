@@ -47,6 +47,20 @@
     --school-gold: 38 92% 50%;
     --school-gold-light: 43 96% 56%;
 
+    /* Admin Dashboard Colors */
+    --admin-sidebar: 224 71% 97%;
+    --admin-primary: 231 91% 63%;
+    --admin-primary-light: 231 91% 68%;
+    --admin-secondary: 174 83% 45%;
+    --admin-warning: 38 92% 50%;
+    --admin-danger: 0 84% 60%;
+    --admin-info: 199 89% 48%;
+    --admin-success: 142 71% 45%;
+    --admin-card-blue: 231 91% 63%;
+    --admin-card-teal: 174 83% 45%;
+    --admin-card-orange: 27 96% 61%;
+    --admin-card-pink: 339 81% 63%;
+
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 213 56% 24%;
