@@ -68,9 +68,9 @@ export function HeroSection() {
           </p>
           <div className="flex flex-wrap gap-4">
             <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-              <Link to="/ppdb">Daftar PPDB 2025</Link>
+              <a href="https://www.ppdbsman1belitang.sch.id/" target="_blank" rel="noopener noreferrer">Daftar PPDB</a>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10">
+            <Button asChild size="lg" className="bg-background/20 border-2 border-primary-foreground text-primary-foreground hover:bg-background/30 backdrop-blur-sm">
               <Link to="/profil/sejarah">Lihat Profil</Link>
             </Button>
           </div>

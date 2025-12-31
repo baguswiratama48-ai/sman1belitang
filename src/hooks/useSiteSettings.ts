@@ -69,7 +69,19 @@ export interface FooterSettings {
   quick_links: QuickLink[];
 }
 
-type SettingsKey = 'hero_slides' | 'ppdb' | 'visi_misi' | 'sambutan' | 'stats' | 'kontak' | 'footer';
+export interface NavMenuItem {
+  label: string;
+  href?: string;
+  external?: boolean;
+  highlight?: boolean;
+  children?: { label: string; href: string; external?: boolean }[];
+}
+
+export interface NavMenuSettings {
+  items: NavMenuItem[];
+}
+
+type SettingsKey = 'hero_slides' | 'ppdb' | 'visi_misi' | 'sambutan' | 'stats' | 'kontak' | 'footer' | 'navbar';
 
 export function useSiteSetting<T>(key: SettingsKey) {
   return useQuery({
