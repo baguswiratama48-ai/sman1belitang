@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown, GraduationCap, LogIn } from "lucide-react";
+import { Menu, X, ChevronDown, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import logoSmansa from "@/assets/logo-smansa.png";
 
 const menuItems = [
   { label: "BERANDA", href: "/" },
@@ -45,7 +46,7 @@ const menuItems = [
       { label: "Berita Terbaru", href: "/informasi/berita" },
     ],
   },
-  { label: "PPDB 2025", href: "/ppdb", highlight: true },
+  { label: "PPDB 2025", href: "https://www.ppdbsman1belitang.sch.id/", highlight: true, external: true },
   {
     label: "LINK PENDIDIKAN",
     children: [
@@ -88,9 +89,7 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
-              <GraduationCap className="h-7 w-7 text-primary-foreground" />
-            </div>
+            <img src={logoSmansa} alt="Logo SMAN 1 Belitang" className="w-12 h-14 object-contain" />
             <div className="hidden sm:block">
               <h1 className="font-bold text-lg text-primary leading-tight">SMAN 1 BELITANG</h1>
               <p className="text-xs text-muted-foreground">OKU Timur, Sumatera Selatan</p>
@@ -208,6 +207,23 @@ function NavItem({ item, isActive }: NavItemProps) {
     );
   }
 
+  if (item.external) {
+    return (
+      <a href={item.href!} target="_blank" rel="noopener noreferrer">
+        <Button
+          variant="ghost"
+          size="sm"
+          className={cn(
+            "text-sm font-medium",
+            item.highlight && "bg-accent text-accent-foreground hover:bg-accent/90"
+          )}
+        >
+          {item.label}
+        </Button>
+      </a>
+    );
+  }
+
   return (
     <Link to={item.href!}>
       <Button
@@ -270,6 +286,23 @@ function MobileNavItem({ item, isActive, onClose }: MobileNavItemProps) {
           </div>
         )}
       </div>
+    );
+  }
+
+  if (item.external) {
+    return (
+      <a
+        href={item.href!}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onClose}
+        className={cn(
+          "block px-4 py-2 text-sm font-medium rounded-md hover:bg-muted",
+          item.highlight && "bg-accent text-accent-foreground"
+        )}
+      >
+        {item.label}
+      </a>
     );
   }
 
