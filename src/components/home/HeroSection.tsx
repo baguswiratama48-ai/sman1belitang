@@ -4,40 +4,49 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useSiteSetting, HeroSlide } from "@/hooks/useSiteSettings";
 
+// Import slider images - Ganti file di src/assets/ untuk mengupdate slider
+// Nama file: SLIDE_1.jpg, SLIDE_2.png, SLIDE_3.png, SLIDE_4.png, SLIDE_5.png
+// Ukuran optimal: 1920 x 700 px
+import SLIDE_1 from "@/assets/SLIDE_1.jpg";
+import SLIDE_2 from "@/assets/SLIDE_2.png";
+import SLIDE_3 from "@/assets/SLIDE_3.png";
+import SLIDE_4 from "@/assets/SLIDE_4.png";
+import SLIDE_5 from "@/assets/SLIDE_5.png";
+
 export function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { data: slides, isLoading } = useSiteSetting<HeroSlide[]>('hero_slides');
 
   const defaultSlides: HeroSlide[] = [
     {
-      image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920&q=80",
+      image: SLIDE_1,
       title: "Selamat Datang di",
       subtitle: "SMAN 1 BELITANG",
       description: "Menjadi SMA Prima yang berpacu meraih Prestasi Luhur Budi Pekerti",
     },
     {
-      image: "https://images.unsplash.com/photo-1562774053-701939374585?w=1920&q=80",
-      title: "Pendidikan",
-      subtitle: "Berkualitas",
-      description: "Meningkatkan kecerdasan, pengetahuan, kepribadian, dan akhlak mulia",
+      image: SLIDE_2,
+      title: "Paskibra",
+      subtitle: "SMAN 1 BELITANG",
+      description: "Membentuk karakter disiplin dan semangat nasionalisme",
     },
     {
-      image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1920&q=80",
-      title: "Fasilitas",
-      subtitle: "Lengkap",
-      description: "Mendukung kegiatan belajar mengajar dengan fasilitas modern",
-    },
-    {
-      image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1920&q=80",
+      image: SLIDE_3,
       title: "Prestasi",
-      subtitle: "Cemerlang",
-      description: "Meraih prestasi di berbagai bidang akademik dan non-akademik",
+      subtitle: "Marching Band",
+      description: "Meraih prestasi gemilang di berbagai kompetisi",
     },
     {
-      image: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=1920&q=80",
-      title: "Generasi",
-      subtitle: "Unggul",
-      description: "Mencetak generasi yang berkarakter dan siap menghadapi masa depan",
+      image: SLIDE_4,
+      title: "Prestasi",
+      subtitle: "Akademik",
+      description: "Siswa berprestasi dalam berbagai bidang akademik",
+    },
+    {
+      image: SLIDE_5,
+      title: "Budaya",
+      subtitle: "Lokal",
+      description: "Melestarikan budaya dan tradisi daerah",
     },
   ];
 
