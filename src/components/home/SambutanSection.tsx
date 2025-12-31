@@ -1,5 +1,6 @@
 import { Quote } from "lucide-react";
 import { useSiteSetting, SambutanSettings } from "@/hooks/useSiteSettings";
+import kepalaSekolahImg from "@/assets/kepala-sekolah.jpg";
 
 export function SambutanSection() {
   const { data: sambutan, isLoading } = useSiteSetting<SambutanSettings>('sambutan');
@@ -7,8 +8,8 @@ export function SambutanSection() {
   const defaultData: SambutanSettings = {
     nama: "H. Prioyitno, S.Pd. MM",
     jabatan: "Kepala SMAN 1 Belitang",
-    foto: "",
-    konten: "Assalamu'alaikum Warahmatullahi Wabarakatuh.\n\nSelamat datang di website resmi SMAN 1 Belitang."
+    foto: kepalaSekolahImg,
+    konten: "Assalamu'alaikum Warahmatullahi Wabarakatuh.\n\nSelamat datang di website resmi SMAN 1 Belitang. Website ini merupakan media informasi dan komunikasi antara sekolah dengan seluruh stakeholder pendidikan.\n\nKami berkomitmen untuk terus meningkatkan kualitas pendidikan dan menghasilkan lulusan yang berakhlak mulia, cerdas, dan kompetitif.\n\nSemoga website ini dapat memberikan informasi yang bermanfaat bagi semua pihak.\n\nWassalamu'alaikum Warahmatullahi Wabarakatuh."
   };
 
   const data = sambutan || defaultData;
