@@ -19,11 +19,7 @@ import {
   Plus,
   Trash2,
   Save,
-  Loader2,
-  Menu,
-  ChevronDown,
-  ChevronUp,
-  ExternalLink
+  Loader2
 } from "lucide-react";
 
 interface HeroSlide {
@@ -38,13 +34,6 @@ interface PPDBTimeline {
   date: string;
 }
 
-interface NavMenuItem {
-  label: string;
-  href?: string;
-  external?: boolean;
-  highlight?: boolean;
-  children?: { label: string; href: string; external?: boolean }[];
-}
 
 export default function KontenAdmin() {
   const { toast } = useToast();
@@ -101,12 +90,8 @@ export default function KontenAdmin() {
         </div>
       </div>
 
-      <Tabs defaultValue="navbar" className="space-y-4">
-        <TabsList className="grid grid-cols-4 lg:grid-cols-8 gap-2 h-auto p-1">
-          <TabsTrigger value="navbar" className="flex items-center gap-2 text-xs">
-            <Menu className="h-4 w-4" />
-            <span className="hidden sm:inline">Menu</span>
-          </TabsTrigger>
+      <Tabs defaultValue="hero" className="space-y-4">
+        <TabsList className="grid grid-cols-4 lg:grid-cols-7 gap-2 h-auto p-1">
           <TabsTrigger value="hero" className="flex items-center gap-2 text-xs">
             <Image className="h-4 w-4" />
             <span className="hidden sm:inline">Slider</span>
@@ -136,15 +121,6 @@ export default function KontenAdmin() {
             <span className="hidden sm:inline">Footer</span>
           </TabsTrigger>
         </TabsList>
-
-        {/* Navbar Menu */}
-        <TabsContent value="navbar">
-          <NavbarMenuEditor 
-            data={settings?.navbar as { items: NavMenuItem[] } || { items: [] }} 
-            onSave={(value) => updateMutation.mutate({ key: 'navbar', value })}
-            isSaving={updateMutation.isPending}
-          />
-        </TabsContent>
 
         {/* Hero Slider */}
         <TabsContent value="hero">
@@ -930,249 +906,3 @@ function FooterEditor({
   );
 }
 
-// Default navbar menu items
-const defaultNavbarItems: NavMenuItem[] = [
-  { label: "BERANDA", href: "/" },
-  { label: "GALERI", href: "/galeri" },
-  {
-    label: "PROFIL",
-    children: [
-      { label: "Sejarah", href: "/profil/sejarah" },
-      { label: "Visi & Misi", href: "/profil/visi-misi" },
-      { label: "Struktur Organisasi", href: "/profil/struktur" },
-    ],
-  },
-  {
-    label: "GURU & STAFF",
-    children: [
-      { label: "Daftar Guru", href: "/guru-staff/guru" },
-      { label: "Tenaga Kependidikan", href: "/guru-staff/tendik" },
-    ],
-  },
-  { label: "SISWA", href: "/siswa" },
-  { label: "FASILITAS", href: "/fasilitas" },
-  { label: "PRESTASI", href: "/prestasi" },
-  {
-    label: "AGENDA",
-    children: [
-      { label: "Kalender Akademik", href: "/agenda/kalender" },
-      { label: "Kegiatan Sekolah", href: "/agenda/kegiatan" },
-    ],
-  },
-  {
-    label: "INFORMASI",
-    children: [
-      { label: "Pengumuman", href: "/informasi/pengumuman" },
-      { label: "Berita Terbaru", href: "/informasi/berita" },
-    ],
-  },
-  { label: "PPDB", href: "https://www.ppdbsman1belitang.sch.id/", highlight: true, external: true },
-  {
-    label: "LINK PENDIDIKAN",
-    children: [
-      { label: "Kemendikbud", href: "https://kemdikbud.go.id", external: true },
-      { label: "Dinas Pendidikan Sumsel", href: "https://disdik.sumselprov.go.id", external: true },
-      { label: "LTMPT", href: "https://ltmpt.ac.id", external: true },
-    ],
-  },
-  { label: "EKSKUL", href: "/ekskul" },
-  { label: "OSIS", href: "/osis" },
-  { label: "ALUMNI", href: "/alumni" },
-];
-
-// Navbar Menu Editor
-function NavbarMenuEditor({ 
-  data, 
-  onSave, 
-  isSaving 
-}: { 
-  data: { items: NavMenuItem[] }; 
-  onSave: (value: unknown) => void;
-  isSaving: boolean;
-}) {
-  const [localItems, setLocalItems] = useState<NavMenuItem[]>(
-    data.items.length > 0 ? data.items : defaultNavbarItems
-  );
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-
-  const addMenuItem = () => {
-    setLocalItems([...localItems, { label: "", href: "" }]);
-  };
-
-  const removeMenuItem = (index: number) => {
-    setLocalItems(localItems.filter((_, i) => i !== index));
-    if (expandedIndex === index) setExpandedIndex(null);
-  };
-
-  const updateMenuItem = (index: number, field: keyof NavMenuItem, value: unknown) => {
-    const updated = [...localItems];
-    updated[index] = { ...updated[index], [field]: value };
-    setLocalItems(updated);
-  };
-
-  const addSubMenuItem = (parentIndex: number) => {
-    const updated = [...localItems];
-    const children = updated[parentIndex].children || [];
-    updated[parentIndex].children = [...children, { label: "", href: "" }];
-    setLocalItems(updated);
-  };
-
-  const removeSubMenuItem = (parentIndex: number, childIndex: number) => {
-    const updated = [...localItems];
-    updated[parentIndex].children = updated[parentIndex].children?.filter((_, i) => i !== childIndex);
-    setLocalItems(updated);
-  };
-
-  const updateSubMenuItem = (parentIndex: number, childIndex: number, field: string, value: unknown) => {
-    const updated = [...localItems];
-    if (updated[parentIndex].children) {
-      updated[parentIndex].children![childIndex] = {
-        ...updated[parentIndex].children![childIndex],
-        [field]: value,
-      };
-    }
-    setLocalItems(updated);
-  };
-
-  const moveItem = (index: number, direction: 'up' | 'down') => {
-    const newIndex = direction === 'up' ? index - 1 : index + 1;
-    if (newIndex < 0 || newIndex >= localItems.length) return;
-    const updated = [...localItems];
-    [updated[index], updated[newIndex]] = [updated[newIndex], updated[index]];
-    setLocalItems(updated);
-    if (expandedIndex === index) setExpandedIndex(newIndex);
-    else if (expandedIndex === newIndex) setExpandedIndex(index);
-  };
-
-  return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="flex items-center gap-2">
-          <Menu className="h-5 w-5" />
-          Menu Navigasi
-        </CardTitle>
-        <Button onClick={addMenuItem} size="sm">
-          <Plus className="h-4 w-4 mr-2" />
-          Tambah Menu
-        </Button>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {localItems.map((item, index) => (
-          <div key={index} className="border rounded-lg p-4 space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="flex flex-col gap-1">
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-6 w-6" 
-                  onClick={() => moveItem(index, 'up')}
-                  disabled={index === 0}
-                >
-                  <ChevronUp className="h-4 w-4" />
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-6 w-6" 
-                  onClick={() => moveItem(index, 'down')}
-                  disabled={index === localItems.length - 1}
-                >
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-2">
-                <Input
-                  placeholder="Label Menu"
-                  value={item.label}
-                  onChange={(e) => updateMenuItem(index, 'label', e.target.value)}
-                />
-                <Input
-                  placeholder="URL/Path (kosongkan jika ada submenu)"
-                  value={item.href || ''}
-                  onChange={(e) => updateMenuItem(index, 'href', e.target.value)}
-                />
-                <div className="flex items-center gap-4">
-                  <label className="flex items-center gap-1 text-xs">
-                    <input
-                      type="checkbox"
-                      checked={item.external || false}
-                      onChange={(e) => updateMenuItem(index, 'external', e.target.checked)}
-                      className="w-4 h-4"
-                    />
-                    <ExternalLink className="h-3 w-3" /> External
-                  </label>
-                  <label className="flex items-center gap-1 text-xs">
-                    <input
-                      type="checkbox"
-                      checked={item.highlight || false}
-                      onChange={(e) => updateMenuItem(index, 'highlight', e.target.checked)}
-                      className="w-4 h-4"
-                    />
-                    Highlight
-                  </label>
-                </div>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
-              >
-                Submenu ({item.children?.length || 0})
-              </Button>
-              <Button 
-                variant="destructive" 
-                size="icon" 
-                onClick={() => removeMenuItem(index)}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
-
-            {/* Submenu Editor */}
-            {expandedIndex === index && (
-              <div className="ml-8 mt-4 p-4 bg-muted rounded-lg space-y-2">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium">Submenu</span>
-                  <Button onClick={() => addSubMenuItem(index)} size="sm" variant="outline">
-                    <Plus className="h-4 w-4 mr-1" /> Tambah Submenu
-                  </Button>
-                </div>
-                {(item.children || []).map((child, childIndex) => (
-                  <div key={childIndex} className="flex gap-2">
-                    <Input
-                      placeholder="Label"
-                      value={child.label}
-                      onChange={(e) => updateSubMenuItem(index, childIndex, 'label', e.target.value)}
-                    />
-                    <Input
-                      placeholder="URL/Path"
-                      value={child.href}
-                      onChange={(e) => updateSubMenuItem(index, childIndex, 'href', e.target.value)}
-                    />
-                    <label className="flex items-center gap-1 text-xs whitespace-nowrap">
-                      <input
-                        type="checkbox"
-                        checked={child.external || false}
-                        onChange={(e) => updateSubMenuItem(index, childIndex, 'external', e.target.checked)}
-                        className="w-4 h-4"
-                      />
-                      External
-                    </label>
-                    <Button variant="destructive" size="icon" onClick={() => removeSubMenuItem(index, childIndex)}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-
-        <Button onClick={() => onSave({ items: localItems })} disabled={isSaving} className="w-full">
-          {isSaving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
-          Simpan Menu Navigasi
-        </Button>
-      </CardContent>
-    </Card>
-  );
-}
