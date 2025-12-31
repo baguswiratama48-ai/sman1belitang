@@ -15,6 +15,30 @@ export function HeroSection() {
       subtitle: "SMAN 1 BELITANG",
       description: "Menjadi SMA Prima yang berpacu meraih Prestasi Luhur Budi Pekerti",
     },
+    {
+      image: "https://images.unsplash.com/photo-1562774053-701939374585?w=1920&q=80",
+      title: "Pendidikan",
+      subtitle: "Berkualitas",
+      description: "Meningkatkan kecerdasan, pengetahuan, kepribadian, dan akhlak mulia",
+    },
+    {
+      image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1920&q=80",
+      title: "Fasilitas",
+      subtitle: "Lengkap",
+      description: "Mendukung kegiatan belajar mengajar dengan fasilitas modern",
+    },
+    {
+      image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1920&q=80",
+      title: "Prestasi",
+      subtitle: "Cemerlang",
+      description: "Meraih prestasi di berbagai bidang akademik dan non-akademik",
+    },
+    {
+      image: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=1920&q=80",
+      title: "Generasi",
+      subtitle: "Unggul",
+      description: "Mencetak generasi yang berkarakter dan siap menghadapi masa depan",
+    },
   ];
 
   const activeSlides = slides && slides.length > 0 ? slides : defaultSlides;
