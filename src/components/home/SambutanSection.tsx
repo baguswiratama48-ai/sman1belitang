@@ -12,7 +12,13 @@ export function SambutanSection() {
     konten: "Assalamu'alaikum Warahmatullahi Wabarakatuh.\n\nSelamat datang di website resmi SMAN 1 Belitang. Website ini merupakan media informasi dan komunikasi antara sekolah dengan seluruh stakeholder pendidikan.\n\nKami berkomitmen untuk terus meningkatkan kualitas pendidikan dan menghasilkan lulusan yang berakhlak mulia, cerdas, dan kompetitif.\n\nSemoga website ini dapat memberikan informasi yang bermanfaat bagi semua pihak.\n\nWassalamu'alaikum Warahmatullahi Wabarakatuh."
   };
 
-  const data = sambutan || defaultData;
+  // Merge with defaults, using imported image as fallback for foto
+  const data = {
+    nama: sambutan?.nama || defaultData.nama,
+    jabatan: sambutan?.jabatan || defaultData.jabatan,
+    foto: sambutan?.foto || kepalaSekolahImg,
+    konten: sambutan?.konten || defaultData.konten,
+  };
 
   if (isLoading) {
     return <section className="py-16 bg-muted/30 animate-pulse h-96" />;
