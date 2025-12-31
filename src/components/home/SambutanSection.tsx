@@ -1,6 +1,25 @@
 import { Quote } from "lucide-react";
+import { useSiteSetting, SambutanSettings } from "@/hooks/useSiteSettings";
 
 export function SambutanSection() {
+  const { data: sambutan, isLoading } = useSiteSetting<SambutanSettings>('sambutan');
+
+  const defaultData: SambutanSettings = {
+    nama: "H. Prioyitno, S.Pd. MM",
+    jabatan: "Kepala SMAN 1 Belitang",
+    foto: "",
+    konten: "Assalamu'alaikum Warahmatullahi Wabarakatuh.\n\nSelamat datang di website resmi SMAN 1 Belitang."
+  };
+
+  const data = sambutan || defaultData;
+
+  if (isLoading) {
+    return <section className="py-16 bg-muted/30 animate-pulse h-96" />;
+  }
+
+  // Split content by newlines for proper rendering
+  const contentParagraphs = data.konten.split('\n').filter(p => p.trim());
+
   return (
     <section className="py-16 bg-muted/30">
       <div className="container mx-auto px-4">
@@ -10,26 +29,36 @@ export function SambutanSection() {
             <div className="shrink-0">
               <div className="relative">
                 <div className="w-48 h-56 md:w-56 md:h-64 bg-gradient-to-br from-primary to-primary/80 rounded-2xl overflow-hidden">
-                  <img
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop"
-                    alt="Kepala Sekolah"
-                    className="w-full h-full object-cover mix-blend-overlay opacity-50"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-primary-foreground text-center">
-                      <div className="w-20 h-20 mx-auto mb-2 border-4 border-primary-foreground/50 rounded-full flex items-center justify-center text-3xl font-bold">
-                        HP
+                  {data.foto ? (
+                    <img
+                      src={data.foto}
+                      alt={data.nama}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <>
+                      <img
+                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop"
+                        alt="Kepala Sekolah"
+                        className="w-full h-full object-cover mix-blend-overlay opacity-50"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-primary-foreground text-center">
+                          <div className="w-20 h-20 mx-auto mb-2 border-4 border-primary-foreground/50 rounded-full flex items-center justify-center text-3xl font-bold">
+                            {data.nama.split(' ').map(n => n[0]).slice(0, 2).join('')}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    </>
+                  )}
                 </div>
                 <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-accent rounded-full flex items-center justify-center">
                   <Quote className="h-8 w-8 text-accent-foreground" />
                 </div>
               </div>
               <div className="text-center mt-6">
-                <h4 className="font-bold text-lg text-foreground">H. Prioyitno, S.Pd. MM</h4>
-                <p className="text-sm text-muted-foreground">Kepala SMAN 1 Belitang</p>
+                <h4 className="font-bold text-lg text-foreground">{data.nama}</h4>
+                <p className="text-sm text-muted-foreground">{data.jabatan}</p>
               </div>
             </div>
 
@@ -39,25 +68,11 @@ export function SambutanSection() {
                 Sambutan <span className="text-accent">Kepala Sekolah</span>
               </h2>
               <div className="space-y-4 text-muted-foreground leading-relaxed">
-                <p>
-                  Assalamu'alaikum Warahmatullahi Wabarakatuh.
-                </p>
-                <p>
-                  Selamat datang di website resmi SMAN 1 Belitang. Puji syukur kita panjatkan 
-                  kehadirat Allah SWT atas segala rahmat dan karunia-Nya.
-                </p>
-                <p>
-                  SMAN 1 Belitang berkomitmen untuk terus meningkatkan mutu pendidikan dan 
-                  menghasilkan lulusan yang tidak hanya unggul dalam akademik, tetapi juga 
-                  memiliki akhlak mulia dan siap berkontribusi untuk bangsa.
-                </p>
-                <p>
-                  Semoga website ini dapat menjadi sarana informasi yang bermanfaat bagi 
-                  seluruh civitas akademika dan masyarakat.
-                </p>
-                <p className="font-medium text-foreground">
-                  Wassalamu'alaikum Warahmatullahi Wabarakatuh.
-                </p>
+                {contentParagraphs.map((paragraph, index) => (
+                  <p key={index} className={paragraph.includes("Wassalamu") || paragraph.includes("Assalamu") ? "font-medium text-foreground" : ""}>
+                    {paragraph}
+                  </p>
+                ))}
               </div>
             </div>
           </div>

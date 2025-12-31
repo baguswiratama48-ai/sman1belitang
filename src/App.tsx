@@ -13,6 +13,7 @@ import AdminDashboard from "./pages/admin/Dashboard";
 import BeritaAdmin from "./pages/admin/BeritaAdmin";
 import GaleriAdmin from "./pages/admin/GaleriAdmin";
 import PengumumanAdmin from "./pages/admin/PengumumanAdmin";
+import KontenAdmin from "./pages/admin/KontenAdmin";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => (
               <Route path="berita" element={<BeritaAdmin />} />
               <Route path="galeri" element={<GaleriAdmin />} />
               <Route path="pengumuman" element={<PengumumanAdmin />} />
+              <Route path="konten" element={<KontenAdmin />} />
             </Route>
             
             <Route path="*" element={<NotFound />} />
