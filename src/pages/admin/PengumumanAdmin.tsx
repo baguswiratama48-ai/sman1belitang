@@ -9,9 +9,10 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { Plus, Edit, Trash2, Eye, EyeOff, AlertCircle } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, EyeOff, AlertCircle, Search, Megaphone } from "lucide-react";
 import { format } from "date-fns";
 import { id as idLocale } from "date-fns/locale";
+import { Badge } from "@/components/ui/badge";
 
 interface Pengumuman {
   id: string;
@@ -154,11 +155,18 @@ export default function PengumumanAdmin() {
     });
   };
 
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredPengumuman = pengumumanList.filter((pengumuman) => {
+    return pengumuman.title.toLowerCase().includes(searchQuery.toLowerCase());
+  });
+
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Kelola Pengumuman</h1>
+          <h1 className="text-2xl font-bold text-foreground">Kelola Pengumuman</h1>
           <p className="text-muted-foreground">Tambah, edit, dan hapus pengumuman sekolah</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={(open) => {
@@ -166,13 +174,13 @@ export default function PengumumanAdmin() {
           if (!open) resetForm();
         }}>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="bg-[hsl(var(--admin-primary))] hover:bg-[hsl(var(--admin-primary-light))] shadow-lg">
               <Plus className="mr-2 h-4 w-4" /> Tambah Pengumuman
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-lg">
             <DialogHeader>
-              <DialogTitle>{editingPengumuman ? "Edit Pengumuman" : "Tambah Pengumuman Baru"}</DialogTitle>
+              <DialogTitle className="text-xl">{editingPengumuman ? "Edit Pengumuman" : "Tambah Pengumuman Baru"}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 mt-4">
               <div className="space-y-2">
@@ -182,6 +190,7 @@ export default function PengumumanAdmin() {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="Judul pengumuman"
+                  className="rounded-xl"
                   required
                 />
               </div>
@@ -193,6 +202,7 @@ export default function PengumumanAdmin() {
                   onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                   placeholder="Isi pengumuman"
                   rows={5}
+                  className="rounded-xl"
                   required
                 />
               </div>
@@ -203,16 +213,20 @@ export default function PengumumanAdmin() {
                   type="date"
                   value={formData.expires_at}
                   onChange={(e) => setFormData({ ...formData, expires_at: e.target.value })}
+                  className="rounded-xl"
                 />
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-6">
                 <div className="flex items-center gap-2">
                   <Switch
                     id="is_important"
                     checked={formData.is_important}
                     onCheckedChange={(checked) => setFormData({ ...formData, is_important: checked })}
                   />
-                  <Label htmlFor="is_important">Penting</Label>
+                  <Label htmlFor="is_important" className="flex items-center gap-1">
+                    <AlertCircle className="h-4 w-4 text-[hsl(var(--admin-danger))]" />
+                    Penting
+                  </Label>
                 </div>
                 <div className="flex items-center gap-2">
                   <Switch
@@ -224,10 +238,10 @@ export default function PengumumanAdmin() {
                 </div>
               </div>
               <div className="flex justify-end gap-2 pt-4">
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)} className="rounded-xl">
                   Batal
                 </Button>
-                <Button type="submit">
+                <Button type="submit" className="rounded-xl bg-[hsl(var(--admin-primary))] hover:bg-[hsl(var(--admin-primary-light))]">
                   {editingPengumuman ? "Simpan Perubahan" : "Tambah Pengumuman"}
                 </Button>
               </div>
@@ -236,47 +250,73 @@ export default function PengumumanAdmin() {
         </Dialog>
       </div>
 
-      <Card>
+      {/* Search */}
+      <Card className="border-0 shadow-lg">
+        <CardContent className="p-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Cari pengumuman..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 rounded-xl bg-[hsl(var(--admin-sidebar))] border-0"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Table */}
+      <Card className="border-0 shadow-lg overflow-hidden">
         <CardContent className="p-0">
           {isLoading ? (
-            <div className="p-8 text-center text-muted-foreground">Memuat...</div>
-          ) : pengumumanList.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">
-              Belum ada pengumuman. Klik "Tambah Pengumuman" untuk membuat pengumuman pertama.
+              <div className="h-8 w-8 border-4 border-[hsl(var(--admin-primary))] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+              Memuat...
+            </div>
+          ) : filteredPengumuman.length === 0 ? (
+            <div className="p-12 text-center text-muted-foreground">
+              <div className="inline-flex p-4 rounded-full bg-muted mb-4">
+                <Megaphone className="h-8 w-8" />
+              </div>
+              <p className="font-medium">Tidak ada pengumuman ditemukan</p>
+              <p className="text-sm mt-1">Coba ubah pencarian atau tambah pengumuman baru</p>
             </div>
           ) : (
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>Judul</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Kadaluarsa</TableHead>
-                  <TableHead>Tanggal</TableHead>
-                  <TableHead className="text-right">Aksi</TableHead>
+                <TableRow className="bg-[hsl(var(--admin-sidebar))] hover:bg-[hsl(var(--admin-sidebar))]">
+                  <TableHead className="font-semibold">Judul</TableHead>
+                  <TableHead className="font-semibold">Status</TableHead>
+                  <TableHead className="font-semibold">Kadaluarsa</TableHead>
+                  <TableHead className="font-semibold">Tanggal</TableHead>
+                  <TableHead className="text-right font-semibold">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {pengumumanList.map((pengumuman) => (
-                  <TableRow key={pengumuman.id}>
-                    <TableCell className="font-medium">
+                {filteredPengumuman.map((pengumuman) => (
+                  <TableRow key={pengumuman.id} className="hover:bg-[hsl(var(--admin-sidebar))]/50">
+                    <TableCell>
                       <div className="flex items-center gap-2">
                         {pengumuman.is_important && (
-                          <AlertCircle className="h-4 w-4 text-destructive" />
+                          <Badge className="bg-[hsl(var(--admin-danger))]/10 text-[hsl(var(--admin-danger))] border-0 rounded-lg">
+                            <AlertCircle className="h-3 w-3 mr-1" />
+                            Penting
+                          </Badge>
                         )}
-                        <span className="max-w-xs truncate">{pengumuman.title}</span>
+                        <span className="font-medium max-w-xs truncate">{pengumuman.title}</span>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <span
-                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                          pengumuman.is_published
-                            ? "bg-green-100 text-green-700"
-                            : "bg-gray-100 text-gray-700"
-                        }`}
+                      <Badge 
+                        variant={pengumuman.is_published ? "default" : "outline"}
+                        className={pengumuman.is_published 
+                          ? "bg-[hsl(var(--admin-success))]/10 text-[hsl(var(--admin-success))] hover:bg-[hsl(var(--admin-success))]/20 border-0" 
+                          : ""
+                        }
                       >
-                        {pengumuman.is_published ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
+                        {pengumuman.is_published ? <Eye className="h-3 w-3 mr-1" /> : <EyeOff className="h-3 w-3 mr-1" />}
                         {pengumuman.is_published ? "Aktif" : "Draft"}
-                      </span>
+                      </Badge>
                     </TableCell>
                     <TableCell className="text-muted-foreground text-sm">
                       {pengumuman.expires_at
@@ -287,14 +327,29 @@ export default function PengumumanAdmin() {
                       {format(new Date(pengumuman.created_at), "d MMM yyyy", { locale: idLocale })}
                     </TableCell>
                     <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button size="sm" variant="ghost" onClick={() => togglePublish(pengumuman)}>
+                      <div className="flex justify-end gap-1">
+                        <Button 
+                          size="icon" 
+                          variant="ghost" 
+                          onClick={() => togglePublish(pengumuman)}
+                          className="h-8 w-8 rounded-lg hover:bg-[hsl(var(--admin-primary))]/10"
+                        >
                           {pengumuman.is_published ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </Button>
-                        <Button size="sm" variant="ghost" onClick={() => handleEdit(pengumuman)}>
+                        <Button 
+                          size="icon" 
+                          variant="ghost" 
+                          onClick={() => handleEdit(pengumuman)}
+                          className="h-8 w-8 rounded-lg hover:bg-[hsl(var(--admin-primary))]/10"
+                        >
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button size="sm" variant="ghost" className="text-destructive" onClick={() => handleDelete(pengumuman.id)}>
+                        <Button 
+                          size="icon" 
+                          variant="ghost" 
+                          onClick={() => handleDelete(pengumuman.id)}
+                          className="h-8 w-8 rounded-lg text-destructive hover:bg-destructive/10"
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>

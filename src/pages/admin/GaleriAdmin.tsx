@@ -8,9 +8,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Plus, Edit, Trash2, Eye, EyeOff, ImageIcon } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, EyeOff, ImageIcon, Search, Filter } from "lucide-react";
 import { format } from "date-fns";
 import { id as idLocale } from "date-fns/locale";
+import { ImageUpload } from "@/components/admin/ImageUpload";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Galeri {
   id: string;
@@ -148,11 +151,21 @@ export default function GaleriAdmin() {
     });
   };
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterAlbum, setFilterAlbum] = useState("all");
+
+  const filteredGaleri = galeriList.filter((galeri) => {
+    const matchesSearch = galeri.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesAlbum = filterAlbum === "all" || galeri.album === filterAlbum;
+    return matchesSearch && matchesAlbum;
+  });
+
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Kelola Galeri</h1>
+          <h1 className="text-2xl font-bold text-foreground">Kelola Galeri</h1>
           <p className="text-muted-foreground">Tambah, edit, dan hapus foto galeri sekolah</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={(open) => {
@@ -160,13 +173,13 @@ export default function GaleriAdmin() {
           if (!open) resetForm();
         }}>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="bg-[hsl(var(--admin-primary))] hover:bg-[hsl(var(--admin-primary-light))] shadow-lg">
               <Plus className="mr-2 h-4 w-4" /> Tambah Gambar
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-lg">
             <DialogHeader>
-              <DialogTitle>{editingGaleri ? "Edit Gambar" : "Tambah Gambar Baru"}</DialogTitle>
+              <DialogTitle className="text-xl">{editingGaleri ? "Edit Gambar" : "Tambah Gambar Baru"}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 mt-4">
               <div className="space-y-2">
@@ -176,6 +189,7 @@ export default function GaleriAdmin() {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="Judul gambar"
+                  className="rounded-xl"
                   required
                 />
               </div>
@@ -187,32 +201,29 @@ export default function GaleriAdmin() {
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Deskripsi singkat"
                   rows={2}
+                  className="rounded-xl"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="image_url">URL Gambar *</Label>
-                <Input
-                  id="image_url"
-                  value={formData.image_url}
-                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                  placeholder="https://example.com/image.jpg"
-                  required
-                />
-              </div>
+              <ImageUpload
+                value={formData.image_url}
+                onChange={(url) => setFormData({ ...formData, image_url: url })}
+                label="Gambar *"
+                folder="galeri"
+              />
               <div className="space-y-2">
                 <Label htmlFor="album">Album</Label>
-                <select
-                  id="album"
-                  value={formData.album}
-                  onChange={(e) => setFormData({ ...formData, album: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-md bg-background"
-                >
-                  <option value="umum">Umum</option>
-                  <option value="kegiatan">Kegiatan</option>
-                  <option value="prestasi">Prestasi</option>
-                  <option value="fasilitas">Fasilitas</option>
-                  <option value="upacara">Upacara</option>
-                </select>
+                <Select value={formData.album} onValueChange={(value) => setFormData({ ...formData, album: value })}>
+                  <SelectTrigger className="rounded-xl">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="umum">Umum</SelectItem>
+                    <SelectItem value="kegiatan">Kegiatan</SelectItem>
+                    <SelectItem value="prestasi">Prestasi</SelectItem>
+                    <SelectItem value="fasilitas">Fasilitas</SelectItem>
+                    <SelectItem value="upacara">Upacara</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div className="flex items-center gap-2">
                 <Switch
@@ -223,10 +234,10 @@ export default function GaleriAdmin() {
                 <Label htmlFor="is_published">Publikasikan sekarang</Label>
               </div>
               <div className="flex justify-end gap-2 pt-4">
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)} className="rounded-xl">
                   Batal
                 </Button>
-                <Button type="submit">
+                <Button type="submit" className="rounded-xl bg-[hsl(var(--admin-primary))] hover:bg-[hsl(var(--admin-primary-light))]">
                   {editingGaleri ? "Simpan Perubahan" : "Tambah Gambar"}
                 </Button>
               </div>
@@ -235,53 +246,114 @@ export default function GaleriAdmin() {
         </Dialog>
       </div>
 
+      {/* Filters */}
+      <Card className="border-0 shadow-lg">
+        <CardContent className="p-4">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Cari gambar..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 rounded-xl bg-[hsl(var(--admin-sidebar))] border-0"
+              />
+            </div>
+            <Select value={filterAlbum} onValueChange={setFilterAlbum}>
+              <SelectTrigger className="w-full sm:w-40 rounded-xl">
+                <Filter className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Album" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua</SelectItem>
+                <SelectItem value="umum">Umum</SelectItem>
+                <SelectItem value="kegiatan">Kegiatan</SelectItem>
+                <SelectItem value="prestasi">Prestasi</SelectItem>
+                <SelectItem value="fasilitas">Fasilitas</SelectItem>
+                <SelectItem value="upacara">Upacara</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Gallery Grid */}
       {isLoading ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="aspect-square bg-muted animate-pulse rounded-lg"></div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            <div key={i} className="aspect-square bg-muted animate-pulse rounded-2xl"></div>
           ))}
         </div>
-      ) : galeriList.length === 0 ? (
-        <Card>
-          <CardContent className="p-8 text-center text-muted-foreground">
-            <ImageIcon className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p>Belum ada gambar. Klik "Tambah Gambar" untuk menambah foto.</p>
+      ) : filteredGaleri.length === 0 ? (
+        <Card className="border-0 shadow-lg">
+          <CardContent className="p-12 text-center text-muted-foreground">
+            <div className="inline-flex p-4 rounded-full bg-muted mb-4">
+              <ImageIcon className="h-8 w-8" />
+            </div>
+            <p className="font-medium">Tidak ada gambar ditemukan</p>
+            <p className="text-sm mt-1">Coba ubah filter atau tambah gambar baru</p>
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {galeriList.map((galeri) => (
-            <Card key={galeri.id} className="overflow-hidden group">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filteredGaleri.map((galeri) => (
+            <Card key={galeri.id} className="overflow-hidden group border-0 shadow-lg hover:shadow-xl transition-all duration-300">
               <div className="aspect-square relative">
                 <img
                   src={galeri.image_url}
                   alt={galeri.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = "/placeholder.svg";
                   }}
                 />
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                  <Button size="sm" variant="secondary" onClick={() => togglePublish(galeri)}>
-                    {galeri.is_published ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </Button>
-                  <Button size="sm" variant="secondary" onClick={() => handleEdit(galeri)}>
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button size="sm" variant="destructive" onClick={() => handleDelete(galeri.id)}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-                {!galeri.is_published && (
-                  <div className="absolute top-2 right-2">
-                    <span className="bg-gray-900/80 text-white text-xs px-2 py-1 rounded">Draft</span>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <p className="text-white font-medium text-sm truncate mb-3">{galeri.title}</p>
+                    <div className="flex items-center gap-2">
+                      <Button 
+                        size="sm" 
+                        variant="secondary" 
+                        onClick={() => togglePublish(galeri)}
+                        className="h-8 rounded-lg"
+                      >
+                        {galeri.is_published ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="secondary" 
+                        onClick={() => handleEdit(galeri)}
+                        className="h-8 rounded-lg"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="destructive" 
+                        onClick={() => handleDelete(galeri.id)}
+                        className="h-8 rounded-lg"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                )}
+                </div>
+                {/* Status Badge */}
+                <div className="absolute top-3 right-3 flex gap-2">
+                  {!galeri.is_published && (
+                    <Badge variant="secondary" className="bg-black/60 text-white border-0 rounded-lg">
+                      <EyeOff className="h-3 w-3 mr-1" />
+                      Draft
+                    </Badge>
+                  )}
+                </div>
+                {/* Album Badge */}
+                <div className="absolute top-3 left-3">
+                  <Badge className="bg-[hsl(var(--admin-primary))]/90 text-white border-0 rounded-lg capitalize">
+                    {galeri.album}
+                  </Badge>
+                </div>
               </div>
-              <CardContent className="p-3">
-                <p className="font-medium text-sm truncate">{galeri.title}</p>
-                <p className="text-xs text-muted-foreground capitalize">{galeri.album}</p>
-              </CardContent>
             </Card>
           ))}
         </div>
