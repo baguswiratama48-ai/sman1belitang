@@ -23,6 +23,7 @@ interface Berita {
   excerpt: string | null;
   content: string;
   image_url: string | null;
+  gallery_images: string[] | null;
   category: string;
   is_published: boolean;
   published_at: string | null;
@@ -39,6 +40,7 @@ export default function BeritaAdmin() {
     excerpt: "",
     content: "",
     image_url: "",
+    gallery_images: [] as string[],
     category: "umum",
     is_published: false,
   });
@@ -55,7 +57,7 @@ export default function BeritaAdmin() {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      setBeritaList(data || []);
+      setBeritaList((data as any) || []);
     } catch (error) {
       if (import.meta.env.DEV) console.error("Error fetching berita:", error);
       toast.error("Gagal memuat data berita");
@@ -73,7 +75,7 @@ export default function BeritaAdmin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.title || !formData.content) {
       toast.error("Judul dan konten harus diisi");
       return;
@@ -87,6 +89,7 @@ export default function BeritaAdmin() {
         excerpt: formData.excerpt || null,
         content: formData.content,
         image_url: formData.image_url || null,
+        gallery_images: formData.gallery_images,
         category: formData.category,
         is_published: formData.is_published,
         published_at: formData.is_published ? new Date().toISOString() : null,
@@ -121,6 +124,7 @@ export default function BeritaAdmin() {
       excerpt: berita.excerpt || "",
       content: berita.content,
       image_url: berita.image_url || "",
+      gallery_images: berita.gallery_images || [],
       category: berita.category,
       is_published: berita.is_published,
     });
@@ -167,6 +171,7 @@ export default function BeritaAdmin() {
       excerpt: "",
       content: "",
       image_url: "",
+      gallery_images: [],
       category: "umum",
       is_published: false,
     });
@@ -240,9 +245,52 @@ export default function BeritaAdmin() {
               <ImageUpload
                 value={formData.image_url}
                 onChange={(url) => setFormData({ ...formData, image_url: url })}
-                label="Gambar Utama"
+                label="Gambar Utama (Cover)"
                 folder="berita"
               />
+
+              <div className="space-y-2">
+                <Label>Galeri Foto (Bisa banyak foto)</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  {formData.gallery_images.map((url, index) => (
+                    <div key={index} className="relative group">
+                      <img src={url} alt="" className="w-full h-24 object-cover rounded-xl border" />
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="destructive"
+                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={() => {
+                          const newGallery = [...formData.gallery_images];
+                          newGallery.splice(index, 1);
+                          setFormData({ ...formData, gallery_images: newGallery });
+                        }}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ))}
+                  <div className="flex items-center justify-center border-2 border-dashed rounded-xl h-24 hover:bg-muted/50 cursor-pointer transition-colors"
+                    onClick={() => {
+                      // Trigger galery upload
+                    }}
+                  >
+                    <ImageUpload
+                      value=""
+                      onChange={(url) => {
+                        if (url) {
+                          setFormData({
+                            ...formData,
+                            gallery_images: [...formData.gallery_images, url]
+                          });
+                        }
+                      }}
+                      label=""
+                      folder="berita/gallery"
+                    />
+                  </div>
+                </div>
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="category">Kategori</Label>
                 <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
@@ -341,9 +389,9 @@ export default function BeritaAdmin() {
                     <TableCell>
                       <div className="flex items-center gap-3">
                         {berita.image_url && (
-                          <img 
-                            src={berita.image_url} 
-                            alt="" 
+                          <img
+                            src={berita.image_url}
+                            alt=""
                             className="h-10 w-10 rounded-lg object-cover"
                             onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                           />
@@ -357,10 +405,10 @@ export default function BeritaAdmin() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge 
+                      <Badge
                         variant={berita.is_published ? "default" : "outline"}
-                        className={berita.is_published 
-                          ? "bg-[hsl(var(--admin-success))]/10 text-[hsl(var(--admin-success))] hover:bg-[hsl(var(--admin-success))]/20 border-0" 
+                        className={berita.is_published
+                          ? "bg-[hsl(var(--admin-success))]/10 text-[hsl(var(--admin-success))] hover:bg-[hsl(var(--admin-success))]/20 border-0"
                           : ""
                         }
                       >
@@ -373,25 +421,25 @@ export default function BeritaAdmin() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
-                        <Button 
-                          size="icon" 
-                          variant="ghost" 
+                        <Button
+                          size="icon"
+                          variant="ghost"
                           onClick={() => togglePublish(berita)}
                           className="h-8 w-8 rounded-lg hover:bg-[hsl(var(--admin-primary))]/10"
                         >
                           {berita.is_published ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </Button>
-                        <Button 
-                          size="icon" 
-                          variant="ghost" 
+                        <Button
+                          size="icon"
+                          variant="ghost"
                           onClick={() => handleEdit(berita)}
                           className="h-8 w-8 rounded-lg hover:bg-[hsl(var(--admin-primary))]/10"
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button 
-                          size="icon" 
-                          variant="ghost" 
+                        <Button
+                          size="icon"
+                          variant="ghost"
                           onClick={() => handleDelete(berita.id)}
                           className="h-8 w-8 rounded-lg text-destructive hover:bg-destructive/10"
                         >

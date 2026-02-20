@@ -1,12 +1,13 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Link } from "react-router-dom";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Calendar, ArrowRight, Newspaper } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Calendar, ArrowRight, Newspaper, ChevronRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
+import { Badge } from "@/components/ui/badge";
 
 export default function BeritaList() {
     const { data: berita, isLoading } = useQuery({
@@ -24,86 +25,102 @@ export default function BeritaList() {
     });
 
     return (
-        <div className="min-h-screen flex flex-col bg-slate-50">
+        <div className="min-h-screen flex flex-col bg-[#FDFDFD]">
             <Navbar />
 
             <main className="flex-1">
-                {/* Header */}
-                <section className="bg-primary py-20 text-primary-foreground text-center relative overflow-hidden">
-                    <div className="absolute inset-0 opacity-10">
-                        <Newspaper className="absolute -right-20 -top-20 h-64 w-64 rotate-12" />
+                {/* Modern Hero Header */}
+                <section className="relative pt-32 pb-20 overflow-hidden bg-slate-900">
+                    <div className="absolute inset-0 z-0">
+                        <div className="absolute inset-0 bg-primary/20 mix-blend-multiply"></div>
+                        <img
+                            src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=1600&q=80"
+                            className="w-full h-full object-cover opacity-30"
+                            alt=""
+                        />
                     </div>
                     <div className="container mx-auto px-4 relative z-10">
-                        <h1 className="text-4xl md:text-5xl font-bold mb-4">Berita Terbaru</h1>
-                        <p className="text-lg text-primary-foreground/80 max-w-2xl mx-auto">
-                            Informasi terkini mengenai kegiatan, prestasi, dan pengumuman resmi SMAN 1 Belitang.
+                        <nav className="flex items-center gap-2 text-xs font-bold text-white/50 mb-6 tracking-widest uppercase">
+                            <Link to="/" className="hover:text-white transition-colors">HOME</Link>
+                            <ChevronRight className="h-3 w-3" />
+                            <span className="text-white">BERITA & INFORMASI</span>
+                        </nav>
+                        <h1 className="text-4xl md:text-6xl font-serif font-black text-white mb-6 leading-tight">
+                            Jendela Informasi <br />
+                            <span className="text-primary italic">SMAN 1 Belitang</span>
+                        </h1>
+                        <p className="text-white/70 text-lg max-w-2xl leading-relaxed">
+                            Ikuti perkembangan terbaru, prestasi membanggakan, dan seluruh aktivitas civitas akademika kami di sini.
                         </p>
                     </div>
                 </section>
 
-                {/* List Berita */}
-                <section className="py-16 container mx-auto px-4">
+                {/* News Grid */}
+                <section className="py-20 container mx-auto px-4">
+                    <div className="flex items-center justify-between mb-12">
+                        <h2 className="text-2xl font-serif font-black text-slate-900 flex items-center gap-3">
+                            <span className="w-8 h-1 bg-primary rounded-full"></span>
+                            Artikel Terbaru
+                        </h2>
+                    </div>
+
                     {isLoading ? (
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
                             {[1, 2, 3, 4, 5, 6].map((i) => (
-                                <Card key={i} className="overflow-hidden animate-pulse border-none shadow-md">
-                                    <div className="h-48 bg-slate-200" />
-                                    <CardContent className="p-6 space-y-4">
-                                        <div className="h-4 bg-slate-200 rounded w-24" />
-                                        <div className="h-6 bg-slate-200 rounded w-full" />
-                                        <div className="h-4 bg-slate-200 rounded w-3/4" />
-                                    </CardContent>
-                                </Card>
+                                <div key={i} className="animate-pulse">
+                                    <div className="aspect-[16/10] bg-slate-100 rounded-3xl mb-6" />
+                                    <div className="h-4 bg-slate-100 rounded w-24 mb-4" />
+                                    <div className="h-8 bg-slate-100 rounded w-full mb-3" />
+                                    <div className="h-4 bg-slate-100 rounded w-3/4" />
+                                </div>
                             ))}
                         </div>
                     ) : berita && berita.length > 0 ? (
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
                             {berita.map((item) => (
-                                <Card key={item.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 border-none shadow-md flex flex-col group">
-                                    <div className="relative h-56 overflow-hidden">
-                                        <img
-                                            src={item.image_url || "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=800&q=80"}
-                                            alt={item.title}
-                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                        <span className="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
-                                            {item.category}
-                                        </span>
-                                    </div>
-                                    <CardContent className="p-6 flex-1">
-                                        <div className="flex items-center gap-2 text-sm text-slate-500 mb-3">
-                                            <Calendar className="h-4 w-4" />
-                                            <span>
-                                                {item.published_at
-                                                    ? format(new Date(item.published_at), 'd MMMM yyyy', { locale: id })
-                                                    : 'Baru saja'
-                                                }
-                                            </span>
+                                <article key={item.id} className="group cursor-pointer">
+                                    <Link to={`/informasi/berita/${item.slug}`}>
+                                        <div className="relative aspect-[16/10] overflow-hidden rounded-3xl mb-6 shadow-xl shadow-slate-200/50">
+                                            <img
+                                                src={item.image_url || "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=800&q=80"}
+                                                alt={item.title}
+                                                className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            <Badge className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-slate-900 border-0 hover:bg-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">
+                                                {item.category}
+                                            </Badge>
                                         </div>
-                                        <h3 className="text-xl font-bold text-slate-900 mb-3 line-clamp-2 transition-colors group-hover:text-primary">
-                                            <Link to={`/informasi/berita/${item.slug}`}>{item.title}</Link>
-                                        </h3>
-                                        <p className="text-slate-600 line-clamp-3 text-sm leading-relaxed">
-                                            {item.excerpt || item.content.substring(0, 150) + "..."}
-                                        </p>
-                                    </CardContent>
-                                    <CardFooter className="p-6 pt-0">
-                                        <Link
-                                            to={`/informasi/berita/${item.slug}`}
-                                            className="text-sm text-primary font-bold flex items-center gap-2 group-hover:gap-3 transition-all"
-                                        >
-                                            Baca Selengkapnya <ArrowRight className="h-4 w-4" />
-                                        </Link>
-                                    </CardFooter>
-                                </Card>
+                                        <div className="space-y-3">
+                                            <div className="flex items-center gap-2 text-[11px] font-bold text-slate-400 tracking-widest uppercase">
+                                                <Calendar className="h-3.5 w-3.5 text-primary" />
+                                                <span>
+                                                    {item.published_at
+                                                        ? format(new Date(item.published_at), 'd MMMM yyyy', { locale: id })
+                                                        : 'Baru saja'
+                                                    }
+                                                </span>
+                                            </div>
+                                            <h3 className="text-xl font-serif font-black text-slate-900 leading-snug group-hover:text-primary transition-colors line-clamp-2">
+                                                {item.title}
+                                            </h3>
+                                            <p className="text-slate-500 line-clamp-2 text-sm leading-relaxed font-medium">
+                                                {item.excerpt || item.content.substring(0, 120) + "..."}
+                                            </p>
+                                            <div className="pt-2 flex items-center text-xs font-black text-primary uppercase tracking-[0.2em]">
+                                                BACA SELENGKAPNYA
+                                                <ArrowRight className="ml-2 h-4 w-4 transform transition-transform group-hover:translate-x-2" />
+                                            </div>
+                                        </div>
+                                    </Link>
+                                </article>
                             ))}
                         </div>
                     ) : (
-                        <div className="text-center py-20 bg-white rounded-2xl shadow-sm">
-                            <Newspaper className="h-16 w-16 text-slate-300 mx-auto mb-4" />
-                            <h2 className="text-2xl font-semibold text-slate-900">Belum ada berita</h2>
-                            <p className="text-slate-500 mt-2">Silakan kembali lagi nanti untuk informasi terbaru.</p>
+                        <div className="text-center py-32 bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200">
+                            <Newspaper className="h-16 w-16 text-slate-300 mx-auto mb-6" />
+                            <h2 className="text-3xl font-serif font-black text-slate-900 mb-3">Belum Ada Informasi</h2>
+                            <p className="text-slate-500 max-w-md mx-auto">Kami sedang menyiapkan konten-konten menarik untuk Anda. Silakan kembali beberapa saat lagi.</p>
                         </div>
                     )}
                 </section>
