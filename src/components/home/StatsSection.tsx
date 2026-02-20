@@ -14,7 +14,10 @@ export function StatsSection() {
     tahun_berdiri: 1985,
   };
 
-  const data = statsData || defaultStats;
+  const data = {
+    ...defaultStats,
+    ...(statsData || {})
+  };
 
   const stats = [
     { icon: Users, value: data.jumlah_siswa, suffix: "+", label: "Jumlah Siswa" },
