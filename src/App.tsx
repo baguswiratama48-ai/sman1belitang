@@ -10,6 +10,8 @@ import NotFound from "./pages/NotFound";
 import { PlaceholderPage } from "./components/layout/PlaceholderPage";
 import Sejarah from "./pages/profil/Sejarah";
 import VisiMisi from "./pages/profil/VisiMisi";
+import BeritaList from "./pages/informasi/BeritaList";
+import BeritaDetail from "./pages/informasi/BeritaDetail";
 import { AdminLayout } from "./components/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
 import BeritaAdmin from "./pages/admin/BeritaAdmin";
@@ -52,7 +54,8 @@ const App = () => (
             <Route path="/agenda/kalender" element={<PlaceholderPage title="Kalender Akademik" />} />
             <Route path="/agenda/kegiatan" element={<PlaceholderPage title="Kegiatan Sekolah" />} />
             <Route path="/informasi/pengumuman" element={<PlaceholderPage title="Pengumuman" />} />
-            <Route path="/informasi/berita" element={<PlaceholderPage title="Berita Terbaru" />} />
+            <Route path="/informasi/berita" element={<BeritaList />} />
+            <Route path="/informasi/berita/:slug" element={<BeritaDetail />} />
             <Route path="/ekskul" element={<PlaceholderPage title="Organisasi & Ekskul" />} />
             <Route path="/osis" element={<PlaceholderPage title="OSIS" />} />
             <Route path="/alumni" element={<PlaceholderPage title="Alumni" />} />
