@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import { PlaceholderPage } from "./components/layout/PlaceholderPage";
+import Sejarah from "./pages/profil/Sejarah";
+import VisiMisi from "./pages/profil/VisiMisi";
 import { AdminLayout } from "./components/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
 import BeritaAdmin from "./pages/admin/BeritaAdmin";
@@ -39,8 +41,8 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Auth />} />
             <Route path="/galeri" element={<PlaceholderPage title="Galeri" />} />
-            <Route path="/profil/sejarah" element={<PlaceholderPage title="Sejarah" />} />
-            <Route path="/profil/visi-misi" element={<PlaceholderPage title="Visi & Misi" />} />
+            <Route path="/profil/sejarah" element={<Sejarah />} />
+            <Route path="/profil/visi-misi" element={<VisiMisi />} />
             <Route path="/profil/struktur" element={<PlaceholderPage title="Struktur Organisasi" />} />
             <Route path="/guru-staff/guru" element={<PlaceholderPage title="Daftar Guru" />} />
             <Route path="/guru-staff/tendik" element={<PlaceholderPage title="Tenaga Kependidikan" />} />
@@ -54,7 +56,7 @@ const App = () => (
             <Route path="/ekskul" element={<PlaceholderPage title="Organisasi & Ekskul" />} />
             <Route path="/osis" element={<PlaceholderPage title="OSIS" />} />
             <Route path="/alumni" element={<PlaceholderPage title="Alumni" />} />
-            
+
             {/* Admin Routes */}
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
@@ -74,7 +76,7 @@ const App = () => (
               <Route path="ekskul" element={<EkskulAdmin />} />
               <Route path="osis" element={<OsisAdmin />} />
             </Route>
-            
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

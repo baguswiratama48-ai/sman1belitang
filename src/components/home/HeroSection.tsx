@@ -67,35 +67,35 @@ export function HeroSection() {
       {activeSlides.map((slide, index) => (
         <div
           key={index}
-          className={`absolute inset-0 transition-opacity duration-1000 ${
-            index === currentSlide ? "opacity-100" : "opacity-0"
-          }`}
+          className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"
+            }`}
         >
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${slide.image})` }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/60 to-transparent" />
+          <div className="absolute inset-0 bg-black/20" /> {/* Subtle darkening for overall contrast */}
         </div>
       ))}
 
       {/* Content */}
       <div className="relative container mx-auto px-4 h-full flex items-center">
         <div className="max-w-2xl text-primary-foreground">
-          <p className="text-lg md:text-xl font-medium mb-2 animate-fade-in">
+          <p className="text-lg md:text-xl font-medium mb-2 animate-in fade-in slide-in-from-left-4 duration-700">
             {activeSlides[currentSlide]?.title}
           </p>
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-slide-up">
+          <h1 className="text-5xl md:text-7xl font-extrabold mb-4 tracking-tight animate-in fade-in slide-in-from-bottom-6 duration-1000">
             {activeSlides[currentSlide]?.subtitle}
           </h1>
-          <p className="text-lg md:text-xl opacity-90 mb-8 animate-fade-in">
+          <p className="text-lg md:text-2xl opacity-90 mb-8 max-w-lg leading-relaxed animate-in fade-in duration-1000 delay-300">
             {activeSlides[currentSlide]?.description}
           </p>
-          <div className="flex flex-wrap gap-4">
-            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+          <div className="flex flex-wrap gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500">
+            <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-6 text-lg font-bold shadow-xl transition-all hover:scale-105 active:scale-95">
               <a href="https://www.ppdbsman1belitang.sch.id/" target="_blank" rel="noopener noreferrer">Daftar PPDB</a>
             </Button>
-            <Button asChild size="lg" className="bg-background/20 border-2 border-primary-foreground text-primary-foreground hover:bg-background/30 backdrop-blur-sm">
+            <Button asChild size="lg" className="bg-white/10 border-2 border-white/30 text-white hover:bg-white/20 backdrop-blur-md px-8 py-6 text-lg font-semibold transition-all shadow-lg hover:border-white/60">
               <Link to="/profil/sejarah">Lihat Profil</Link>
             </Button>
           </div>
@@ -127,9 +127,8 @@ export function HeroSection() {
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`w-3 h-3 rounded-full transition-colors ${
-                index === currentSlide ? "bg-accent" : "bg-primary-foreground/50"
-              }`}
+              className={`w-3 h-3 rounded-full transition-colors ${index === currentSlide ? "bg-accent" : "bg-primary-foreground/50"
+                }`}
             />
           ))}
         </div>
