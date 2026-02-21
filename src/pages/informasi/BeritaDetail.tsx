@@ -10,23 +10,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-} from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
-import { useState } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface BeritaDetailData {
     title: string;
     content: string;
     category: string;
     image_url: string | null;
-    gallery_images: string[] | null;
     published_at: string | null;
     created_at: string;
     slug: string;
@@ -34,7 +23,6 @@ interface BeritaDetailData {
 
 export default function BeritaDetail() {
     const { slug } = useParams();
-    const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     const { data: berita, isLoading, error } = useQuery({
         queryKey: ['berita-detail', slug],
@@ -83,8 +71,6 @@ export default function BeritaDetail() {
             </div>
         );
     }
-
-    const gallery = (berita.gallery_images as string[]) || [];
 
     return (
         <div className="min-h-screen flex flex-col bg-[#FDFDFD]">
@@ -166,57 +152,6 @@ export default function BeritaDetail() {
                     <div className="prose prose-slate prose-lg max-w-none prose-p:font-serif prose-p:text-slate-700 prose-p:leading-[1.8] prose-p:text-[1.15rem] prose-headings:font-serif prose-headings:font-bold prose-headings:text-slate-900 prose-blockquote:border-primary prose-blockquote:bg-primary/5 prose-blockquote:rounded-r-2xl prose-blockquote:py-2 prose-blockquote:not-italic prose-strong:text-slate-900 whitespace-pre-wrap">
                         {berita.content}
                     </div>
-
-                    {/* Gallery Section */}
-                    {gallery && gallery.length > 0 && (
-                        <section className="mt-20 pt-16 border-t border-slate-100">
-                            <h2 className="text-2xl font-serif font-black text-slate-900 mb-8 flex items-center gap-3">
-                                <span className="w-10 h-1 bg-primary rounded-full"></span>
-                                Galeri Kegiatan
-                            </h2>
-
-                            <Carousel
-                                opts={{ align: "start", loop: true }}
-                                plugins={[Autoplay({ delay: 4000 })]}
-                                className="w-full relative"
-                            >
-                                <CarouselContent className="-ml-2 md:-ml-4">
-                                    {gallery.map((img, idx) => (
-                                        <CarouselItem key={idx} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
-                                            <div
-                                                className="relative aspect-[4/3] rounded-2xl overflow-hidden group cursor-zoom-in border border-slate-100 shadow-sm transition-transform hover:scale-[1.02]"
-                                                onClick={() => setSelectedImage(img)}
-                                            >
-                                                <img
-                                                    src={img}
-                                                    alt={`Galeri ${idx + 1}`}
-                                                    className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
-                                                />
-                                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors pointer-events-none"></div>
-                                            </div>
-                                        </CarouselItem>
-                                    ))}
-                                </CarouselContent>
-                                <div className="absolute -top-12 right-12 flex gap-2">
-                                    <CarouselPrevious className="relative left-0 right-0 top-0 translate-y-0 h-10 w-10 border-slate-200" />
-                                    <CarouselNext className="relative left-0 right-0 top-0 translate-y-0 h-10 w-10 border-slate-200" />
-                                </div>
-                            </Carousel>
-                        </section>
-                    )}
-
-                    {/* Image Viewer Dialog */}
-                    <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-                        <DialogContent className="max-w-4xl bg-transparent border-0 shadow-none p-0">
-                            {selectedImage && (
-                                <img
-                                    src={selectedImage}
-                                    alt="Gallery Preview"
-                                    className="w-full h-auto max-h-[85vh] object-contain rounded-lg"
-                                />
-                            )}
-                        </DialogContent>
-                    </Dialog>
 
                     {/* Footer Article */}
                     <footer className="mt-20 py-10 border-t border-slate-100 flex flex-col items-center justify-center gap-8">

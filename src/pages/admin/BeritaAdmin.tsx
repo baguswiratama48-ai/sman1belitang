@@ -23,7 +23,6 @@ interface Berita {
   excerpt: string | null;
   content: string;
   image_url: string | null;
-  gallery_images: string[] | null;
   category: string;
   is_published: boolean;
   published_at: string | null;
@@ -40,7 +39,6 @@ export default function BeritaAdmin() {
     excerpt: "",
     content: "",
     image_url: "",
-    gallery_images: [] as string[],
     category: "umum",
     is_published: false,
   });
@@ -89,7 +87,6 @@ export default function BeritaAdmin() {
         excerpt: formData.excerpt || null,
         content: formData.content,
         image_url: formData.image_url || null,
-        gallery_images: formData.gallery_images,
         category: formData.category,
         is_published: formData.is_published,
         published_at: formData.is_published ? new Date().toISOString() : null,
@@ -125,7 +122,6 @@ export default function BeritaAdmin() {
       excerpt: berita.excerpt || "",
       content: berita.content,
       image_url: berita.image_url || "",
-      gallery_images: berita.gallery_images || [],
       category: berita.category,
       is_published: berita.is_published,
     });
@@ -172,7 +168,6 @@ export default function BeritaAdmin() {
       excerpt: "",
       content: "",
       image_url: "",
-      gallery_images: [],
       category: "umum",
       is_published: false,
     });
@@ -250,48 +245,8 @@ export default function BeritaAdmin() {
                 folder="berita"
               />
 
-              <div className="space-y-2">
-                <Label>Galeri Foto (Bisa banyak foto)</Label>
-                <div className="grid grid-cols-2 gap-4">
-                  {formData.gallery_images.map((url, index) => (
-                    <div key={index} className="relative group">
-                      <img src={url} alt="" className="w-full h-24 object-cover rounded-xl border" />
-                      <Button
-                        type="button"
-                        size="icon"
-                        variant="destructive"
-                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={() => {
-                          const newGallery = [...formData.gallery_images];
-                          newGallery.splice(index, 1);
-                          setFormData({ ...formData, gallery_images: newGallery });
-                        }}
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  ))}
-                  <div className="flex items-center justify-center border-2 border-dashed rounded-xl h-24 hover:bg-muted/50 cursor-pointer transition-colors"
-                    onClick={() => {
-                      // Trigger galery upload
-                    }}
-                  >
-                    <ImageUpload
-                      value=""
-                      onChange={(url) => {
-                        if (url) {
-                          setFormData({
-                            ...formData,
-                            gallery_images: [...formData.gallery_images, url]
-                          });
-                        }
-                      }}
-                      label=""
-                      folder="berita/gallery"
-                    />
-                  </div>
-                </div>
-              </div>
+              folder="berita"
+              />
               <div className="space-y-2">
                 <Label htmlFor="category">Kategori</Label>
                 <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
