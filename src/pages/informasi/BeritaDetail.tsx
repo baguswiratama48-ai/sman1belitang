@@ -10,6 +10,16 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import { useState } from "react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface BeritaDetailData {
     title: string;
@@ -24,6 +34,7 @@ interface BeritaDetailData {
 
 export default function BeritaDetail() {
     const { slug } = useParams();
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     const { data: berita, isLoading, error } = useQuery({
         queryKey: ['berita-detail', slug],
@@ -163,20 +174,49 @@ export default function BeritaDetail() {
                                 <span className="w-10 h-1 bg-primary rounded-full"></span>
                                 Galeri Kegiatan
                             </h2>
-                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-                                {gallery.map((img, idx) => (
-                                    <div key={idx} className="relative aspect-[4/3] rounded-2xl overflow-hidden group cursor-zoom-in border border-slate-100 shadow-sm transition-transform hover:scale-[1.02]">
-                                        <img
-                                            src={img}
-                                            alt={`Galeri ${idx + 1}`}
-                                            className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
-                                        />
-                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors pointer-events-none"></div>
-                                    </div>
-                                ))}
-                            </div>
+
+                            <Carousel
+                                opts={{ align: "start", loop: true }}
+                                plugins={[Autoplay({ delay: 4000 })]}
+                                className="w-full relative"
+                            >
+                                <CarouselContent className="-ml-2 md:-ml-4">
+                                    {gallery.map((img, idx) => (
+                                        <CarouselItem key={idx} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+                                            <div
+                                                className="relative aspect-[4/3] rounded-2xl overflow-hidden group cursor-zoom-in border border-slate-100 shadow-sm transition-transform hover:scale-[1.02]"
+                                                onClick={() => setSelectedImage(img)}
+                                            >
+                                                <img
+                                                    src={img}
+                                                    alt={`Galeri ${idx + 1}`}
+                                                    className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
+                                                />
+                                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors pointer-events-none"></div>
+                                            </div>
+                                        </CarouselItem>
+                                    ))}
+                                </CarouselContent>
+                                <div className="absolute -top-12 right-12 flex gap-2">
+                                    <CarouselPrevious className="relative left-0 right-0 top-0 translate-y-0 h-10 w-10 border-slate-200" />
+                                    <CarouselNext className="relative left-0 right-0 top-0 translate-y-0 h-10 w-10 border-slate-200" />
+                                </div>
+                            </Carousel>
                         </section>
                     )}
+
+                    {/* Image Viewer Dialog */}
+                    <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
+                        <DialogContent className="max-w-4xl bg-transparent border-0 shadow-none p-0">
+                            {selectedImage && (
+                                <img
+                                    src={selectedImage}
+                                    alt="Gallery Preview"
+                                    className="w-full h-auto max-h-[85vh] object-contain rounded-lg"
+                                />
+                            )}
+                        </DialogContent>
+                    </Dialog>
 
                     {/* Footer Article */}
                     <footer className="mt-20 py-10 border-t border-slate-100 flex flex-col items-center justify-center gap-8">
