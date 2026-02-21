@@ -113,7 +113,8 @@ export default function BeritaAdmin() {
       fetchBerita();
     } catch (error: any) {
       if (import.meta.env.DEV) console.error("Error saving berita:", error);
-      toast.error("Gagal menyimpan berita");
+      toast.error(error?.message || "Gagal menyimpan berita: Error tidak diketahui");
+      console.error("Save error details:", error);
     }
   };
 
