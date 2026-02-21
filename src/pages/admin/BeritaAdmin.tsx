@@ -245,8 +245,7 @@ export default function BeritaAdmin() {
                 folder="berita"
               />
 
-              folder="berita"
-              />
+
               <div className="space-y-2">
                 <Label htmlFor="category">Kategori</Label>
                 <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
